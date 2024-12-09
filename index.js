@@ -5,7 +5,7 @@ const path = require('path');
 const app = express();
 const port = 3000;
 
-const apiFolderPath = path.join(__dirname, 'API');
+const apiFolderPath = path.join(__dirname, 'Bitx');
 
 fs.readdirSync(apiFolderPath).forEach(file => {
     const filePath = path.join(apiFolderPath, file);
