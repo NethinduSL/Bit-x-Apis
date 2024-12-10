@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern API Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+        <style>
+        /* General Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Navigation Bar */
+        .nav-bar {
+            background: black;
+            color: white;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-bar .menu-icon {
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .nav-bar h1 {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        /* Hidden Side Panel */
+        .side-panel {
+            background: black;
+            color: white;
+            width: 250px;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: -250px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            transition: left 0.3s ease;
+        }
+
+        .side-panel.open {
+            left: 0;
+        }
+
+        .side-panel a {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .side-panel a:hover {
+            background: #333;
+        }
+
+        /* Content Area */
+        .content {
+            flex-grow: 1;
+            padding: 20px;
+        }
+
+        .stats {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+            flex: 1;
+            min-width: 200px;
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .stat-card h3 {
+            margin-bottom: 10px;
+            color: black;
+            font-size: 18px;
+        }
+
+        .stat-card p {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .api-categories h2 {
+            font-size: 24px;
+            margin-top: 30px;
+            color: black;
+        }
+
+        .api-categories .category {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            margin-top: 10px;
+            font-size: 18px;
+            color: black;
+            
+        }
+           .category h3 {
+            text-align: center;
+            color: black;
+        }
+        
+        
+        
+
+
+.but{
+    display: inline-flex; align-items: center; justify-content: center; padding: 10px 20px; text-decoration: none; color: #fff; background: linear-gradient(135deg, #6a11cb, #2575fc); border-radius: 25px; font-size: 16px; font-weight: bold; box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); transition: transform 0.2s ease, background 0.3s ease; position: relative;margin-bottom: 10px; margin-top: 5px;min-width: 40vw;
+    
+}
+
+.icc{
+    
+    margin-right: 10px; 
+    display: inline-block; 
+    transform: scale(1); 
+    transition: transform 0.3s ease;
+}
+
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <div class="nav-bar">
+        
+        <i class="fa-solid fa-bars" onclick="toggleMenu()"></i>
+        <h1>BIT X API ජිතුලා</h1><h1>  </h1>
+    </div>
+
+    <!-- Side Panel -->
+    <div class="side-panel" id="side-panel">
+        <a href="#overview"><i class="fas fa-tachometer-alt"></i> Overview</a>
+        <a href="#stats"><i class="fas fa-chart-bar"></i> Statistics</a>
+        <a href="#categories"><i class="fas fa-th-list"></i> API Categories</a>
+        <a href="#settings"><i class="fas fa-cogs"></i> Settings</a>
+    </div>
+
+    <!-- Main Content -->
+    <div class="content">
+        <section id="overview">
+            <h2>Overview</h2>
+            <div class="stats">
+                <div class="stat-card">
+                    <h3>Current Time</h3>
+                    <p id="current-time">--:--:--</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Uptime</h3>
+                    <p>12 hrs(බොරු)</p>
+                </div>
+                <div class="stat-card">
+                    <h3>RAM Usage</h3>
+                    <p>512 MB(බොරු)</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Visit Count</h3>
+                    <p>1200(අලි පචයක් බන්)</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="categories" class="api-categories">
+            <h2>API Categories</h2>
+            <div class="category">
+                <h3>Main</h3>
+        <center>    <a href="/info" class="but" ><span class="icc"><i class="fa-solid fa-wand-magic-sparkles"></i></span>Info</a>       </center>
+               <center>    <a href="/details" class="but" ><span class="icc"><i class="fa-solid fa-wand-magic-sparkles"></i></span>details</a>       </center>
+            
+            </div>
+            
+            
+            
+             <div class="category">
+                <h3>Download</h3>
+        <center>    <a href="/video?q=hi" class="but" ><span class="icc"><i class="fa-solid fa-wand-magic-sparkles"></i></span>Video</a>       </center>
+              
+            
+            </div>
+            
+            
+            
+     
+        </section>
+    </div>
+
+
+
+
+
+
+
+    <script>
+        // Toggles the side panel visibility
+        function toggleMenu() {
+            const sidePanel = document.getElementById('side-panel');
+            sidePanel.classList.toggle('open');
+        }
+
+        // Function to update the current time
+        function updateTime() {
+            const timeElement = document.getElementById('current-time');
+            const now = new Date();
+            const timeString = now.toLocaleTimeString();
+            timeElement.textContent = timeString;
+        }
+
+        // Update time every second
+        setInterval(updateTime, 1000);
+        updateTime();
+    </script>
+</body>
+</html>
