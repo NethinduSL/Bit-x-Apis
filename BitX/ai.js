@@ -7,7 +7,7 @@ const configuration = new Configuration({
 const openai = new OpenAIApi(configuration);
 
 async function chatgpt(query) {
-    if (!prompt) {
+    if (!query) {
         throw { statusCode: 400, message: 'Prompt is required' };
     }
 
