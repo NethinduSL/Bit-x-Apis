@@ -25,6 +25,14 @@ app.get('/', (req, res) => {
 });
 
 
+router.get('/info', (req, res) => {
+    res.json({ message: 'Main API info is working' });
+});
+
+router.get('/about', (req, res) => {
+    res.json({ message: 'About API is working' });
+});
+
 
 // Export the app for Vercel
 module.exports = app;
