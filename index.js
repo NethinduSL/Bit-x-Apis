@@ -18,4 +18,4 @@ app.get('/details', (req, res) => {
 
 
 // Export the app for Vercel
-module.exports = app;  fix errors
+module.exports = app; 
