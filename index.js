@@ -96,5 +96,53 @@ app.get('/video', async (req, res) => {
     }
 });
 
+
+
+
+const fg = require('api-dylux');
+
+app.get('/video2', async (req, res) => {
+    const query = req.query.q;
+
+    if (!query) {
+        return res.status(400).json({ error: 'Query parameter "q" is required' });
+    }
+
+    try {
+        const searchResults = await fg.search(query);
+
+        if (!searchResults || searchResults.length === 0) {
+            return res.status(404).json({ error: 'No videos found for the search query' });
+        }
+
+        const video = searchResults[0];
+        const videoUrl = video.url;
+        const down = await fg.yta(videoUrl);
+        const downloadUrl = down.dl_url;
+
+        const response = {
+            powered: 'By Bitx❤️',
+            title: video.title,
+            description: video.description,
+            viewCount: video.views,
+            downloadUrl: downloadUrl,
+            thumbnailUrl: video.thumbnail
+        };
+
+        res.json(response);
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).json({ error: 'Failed to fetch video details', message: error.message });
+    }
+});
+
+app.listen(3000, () => {
+    console.log('Server running on http://localhost:3000');
+});
+
+
+
+
+
 // Export the app for deployment on platforms like Vercel
 module.exports = app;
