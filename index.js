@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 
 const app = express(); // Initialize the Express app
-const apiFolderPath = path.join(__dirname, 'Bitx'); // Path to API folder
+const apiFolderPath = path.join(__dirname, 'API'); // Path to API folder
 
 // Dynamically load and use all route files in the folder
 fs.readdirSync(apiFolderPath).forEach(file => {
