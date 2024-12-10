@@ -3,9 +3,9 @@ const fs = require('fs');
 const path = require('path');
 
 const app = express(); // Initialize the Express app
-const apiFolderPath = path.join(__dirname, 'API'); // Path to API folder
+const apiFolderPath = path.join(__dirname, 'API'); // Path to the API folder
 
-// Dynamically load and use all route files in the folder
+// Dynamically load all route files in the API folder
 fs.readdirSync(apiFolderPath).forEach(file => {
     const filePath = path.join(apiFolderPath, file);
 
@@ -35,5 +35,5 @@ app.get('/', (req, res) => {
     res.send('Bit x API server is running!');
 });
 
-// Export the app for Vercel
+// Export the app for Vercel or other cloud platforms
 module.exports = app;
