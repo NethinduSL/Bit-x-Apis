@@ -3,10 +3,9 @@ const fs = require('fs');
 const path = require('path');
 
 const app = express();
-const port = 3000;
-
 const apiFolderPath = path.join(__dirname, 'Bitx');
 
+// Load all routes from the 'Bitx' folder
 fs.readdirSync(apiFolderPath).forEach(file => {
     const filePath = path.join(apiFolderPath, file);
 
@@ -20,10 +19,10 @@ fs.readdirSync(apiFolderPath).forEach(file => {
     }
 });
 
+// Root route
 app.get('/', (req, res) => {
     res.send('API server is running!');
 });
 
-app.listen(port, () => {
-    console.log(`Server is running at http://localhost:3000`);
-});
+// Export the app for Vercel
+module.exports = app;
