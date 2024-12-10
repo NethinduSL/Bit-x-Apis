@@ -7,8 +7,9 @@ const app = express(); // Initialize the Express app
 
 // Root route
 app.get('/', (req, res) => {
-    res.json({🇱🇰:'Bit x API server is running!'});
+    res.send('Bit x API server is running!');
 });
+
 
 app.get('/details', (req, res) => {
     res.json({ message: 'Details from About API' });
