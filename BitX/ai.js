@@ -1,14 +1,12 @@
 const axios = require('axios');
 
 
-const app = express();
-const port = process.env.PORT || 3000;
 
 // Your OpenAI API key stored securely in an environment variable
-const OPENAI_API_KEY = process.env.OPENAI_API_KEY || "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"});
 
-// Middleware to parse JSON request bodies
-app.use(express.json());
+const OPENAI_API_KEY = process.env.OPENAI_API_KEY || "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";
+
+// Middleware to parse 
 
 // Function to call OpenAI's API
 async function chatgpt(query) {
