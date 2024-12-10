@@ -6,7 +6,7 @@ const configuration = new Configuration({
 });
 const openai = new OpenAIApi(configuration);
 
-async function fetchChatGPTResponse(prompt) {
+async function chatgpt(query) {
     if (!prompt) {
         throw { statusCode: 400, message: 'Prompt is required' };
     }
@@ -16,14 +16,14 @@ async function fetchChatGPTResponse(prompt) {
             model: 'gpt-3.5-turbo', // Use 'gpt-4' if you have access
             messages: [
                 { role: 'system', content: 'You are a helpful assistant.' },
-                { role: 'user', content: prompt },
+                { role: 'user', content: query },
             ],
         });
 
         // Extract the assistant's reply
         const message = response.data.choices[0].message.content;
 
-        return { powered: 'By OpenAI', response: message };
+        return { powered: 'By Bit X', response: message };
     } catch (error) {
         throw { statusCode: 500, message: 'Failed to fetch ChatGPT response', details: error.message };
     }
