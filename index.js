@@ -10,8 +10,9 @@ app.use(express.json()); // Parse JSON bodies
 
 //╭──────────────────────main──────────────────────╮//
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname,'home.html'));
-    res.json({ Bitx: 'Bit x apis are comming soon ❤️' });
+    res.sendFile(path.join(__dirname, 'home.html'));
+});
+
 });
 
 app.get('/details', (req, res) => {
