@@ -22,7 +22,7 @@ app.get('/details', (req, res) => {
 const ytSearch = require('yt-search');
 
 
-router.get('/video', async (req, res) => {
+app.get('/video', async (req, res) => {
     const query = req.query.q;  // Get the search query from the URL parameter
     
     if (!query) {
