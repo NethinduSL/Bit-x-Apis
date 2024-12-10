@@ -29,4 +29,4 @@ async function chatgpt(query) {
     }
 }
 
-module.exports = { fetchChatGPTResponse };
+module.exports = { chatgpt };
