@@ -11,7 +11,7 @@ app.get('/', (req, res) => {
 });
 
 
-router.get('/details', (req, res) => {
+app.get('/details', (req, res) => {
     res.json({ message: 'Details from About API' });
 });
 
