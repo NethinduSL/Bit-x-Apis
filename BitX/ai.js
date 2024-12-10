@@ -13,7 +13,16 @@ async function chatgpt(query) {
             }
         });
 
-        return response.data;
+        if (response.data.status) {
+            const resjson = {
+                Power: 'by Bitx❤️'  
+                Bitx: response.data.BK9,
+                // Adding a label to signify the response's strength or quality
+            };
+            return resjson;
+        } else {
+            throw { statusCode: 500, message: 'Failed to get a valid response' };
+        }
     } catch (error) {
         console.error('Error fetching response:', error);
         let errorMessage = 'Failed to fetch response';
