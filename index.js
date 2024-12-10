@@ -1,27 +1,23 @@
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
+const ytSearch = require('yt-search'); // Importing yt-search correctly
 
 const app = express(); // Initialize the Express app
 
+// Middleware to parse incoming requests
+app.use(express.json()); // Parse JSON bodies
 
 //╭──────────────────────main──────────────────────╮//
 app.get('/', (req, res) => {
     res.json({ Bitx: 'Bit x apis are comming soon ❤️' });
 });
 
-
 app.get('/details', (req, res) => {
-   res.json({ message: 'Details from About API' }); 
+    res.json({ message: 'Details from About API' });
 });
 
-
 //╭──────────────────────fact──────────────────────╮//
-
-
-const ytSearch = require('yt-search');
-
-
 app.get('/video', async (req, res) => {
     const query = req.query.q;  // Get the search query from the URL parameter
     
@@ -42,7 +38,7 @@ app.get('/video', async (req, res) => {
 
         // Send the video details as a response
         res.json({
-            powerd:'ByBitx',
+            powered: 'By Bitx',
             title: video.title,
             viewCount: video.views,
             downloadUrl: video.url,
@@ -53,20 +49,5 @@ app.get('/video', async (req, res) => {
     }
 });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// Export the app for Vercel
+// Export the app for deployment on platforms like Vercel
 module.exports = app;
