@@ -37,7 +37,7 @@ app.get('/video', async (req, res) => {
         const video = results.videos[0];
         // Send the video details as a response
         res.json({
-            powered: 'By Bitx',
+            powered: 'By Bitx❤️',
             title: video.title,
             viewCount: video.views,
             downloadUrl: video.url,
