@@ -38,8 +38,9 @@ app.get('/video', (req, res) => {
     const query = req.query.q;
 
     fetchVideoDetails(query)
-        .then((chatgpt) => {
-            res.json(chatgpt);
+        .then((videoData) => {
+            res.json(videoData);
+        
         })
         .catch((error) => {
             res.status(error.statusCode || 500).json({ error: error.message });
@@ -49,10 +50,10 @@ app.get('/video', (req, res) => {
 
 app.get('/Gpt-4', (req, res) => {
     const query = req.query.q;
-
+.then((chatgpt) => {
+            res.json(chatgpt);
     chatgpt(query)
-        .then((videoData) => {
-            res.json(videoData);
+        
         })
         .catch((error) => {
             res.status(error.statusCode || 500).json({ error: error.message });
