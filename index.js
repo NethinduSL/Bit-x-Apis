@@ -38,6 +38,19 @@ app.get('/video', (req, res) => {
     const query = req.query.q;
 
     fetchVideoDetails(query)
+        .then((chatgpt) => {
+            res.json(chatgpt);
+        })
+        .catch((error) => {
+            res.status(error.statusCode || 500).json({ error: error.message });
+        });
+});
+
+
+app.get('/Gpt-4', (req, res) => {
+    const query = req.query.q;
+
+    chatgpt(query)
         .then((videoData) => {
             res.json(videoData);
         })
