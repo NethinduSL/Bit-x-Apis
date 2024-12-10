@@ -19,7 +19,6 @@ app.get('/details', (req, res) => {
 
 
 
-
 app.get('/info', (req, res) => {
     runInfoScript()
         .then((infoData) => {
@@ -29,7 +28,6 @@ app.get('/info', (req, res) => {
             res.status(500).json({ error: 'Failed to fetch info data', message: error.message });
         });
 });
-
 
 
 
@@ -48,28 +46,6 @@ app.get('/video', (req, res) => {
 });
 
 
-
-
-
-
-
-
-
-
-
-
-
-app.listen(3000, () => {
-    console.log('Server running on http://localhost:3000');
-});
-
-module.exports = app;
-            thumbnailUrl: video.thumbnail
-        });
-    } catch (error) {
-        res.status(500).json({ error: 'Failed to fetch video details', message: error.message });
-    }
-});
 
 
 app.listen(3000, () => {
