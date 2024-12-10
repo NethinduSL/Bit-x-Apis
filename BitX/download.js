@@ -1,6 +1,6 @@
 const ytSearch = require('yt-search');
 
-async function fetchVideoDetails(query) {
+async function video(query) {
     if (!query) {
         throw { statusCode: 400, message: 'Query parameter "q" is required' };
     }
@@ -26,4 +26,4 @@ async function fetchVideoDetails(query) {
     }
 }
 
-module.exports = { fetchVideoDetails };
+module.exports = { video };
