@@ -15,9 +15,8 @@ async function chatgpt(query) {
 
         if (response.data.status) {
             const resjson = {
-                Power: 'by Bitx❤️'  
+                Power: 'by Bitx❤️',
                 Bitx: response.data.BK9,
-                // Adding a label to signify the response's strength or quality
             };
             return resjson;
         } else {
