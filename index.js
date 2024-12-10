@@ -10,5 +10,12 @@ app.get('/', (req, res) => {
     res.send('Bit x API server is running!');
 });
 
+
+router.get('/details', (req, res) => {
+    res.json({ message: 'Details from About API' });
+});
+
+
+
 // Export the app for Vercel
 module.exports = app;
