@@ -37,7 +37,7 @@ app.get('/info', (req, res) => {
 app.get('/video', (req, res) => {
     const query = req.query.q;
 
-    fetchVideoDetails(query)
+    video(query)
         .then((videoData) => {
             res.json(videoData);
         
