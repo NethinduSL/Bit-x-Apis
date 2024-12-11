@@ -60,6 +60,18 @@ app.get('/Gpt-4', (req, res) => {
         });
 });
 
+app.get('/Gemini', (req, res) => {
+    const query = req.query.q;
+
+    gemini(query)
+        .then((gemini) => {
+            res.json(chatgpt);
+        })
+        .catch((error) => {
+            res.status(error.statusCode || 500).json({ error: error.message });
+        });
+});
+
 
 
 
