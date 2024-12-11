@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const { runInfoScript } = require('./BitX/info');
 const { video } = require('./BitX/download');
-const { chatgpt } = require('./BitX/ai');
+const { chatgpt,gemini } = require('./BitX/ai');
 
 const app = express();
 
