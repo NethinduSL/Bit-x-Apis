@@ -1,4 +1,8 @@
 const axios = require('axios');
+const { GoogleGenerativeAI } = require("@google/generative-ai");
+
+const genAI = new GoogleGenerativeAI("AIzaSyD6g7ZDG5VANBGC-GFmnzIG29inROwy0u0");
+const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
 async function chatgpt(query) {
     if (!query) {
@@ -8,14 +12,14 @@ async function chatgpt(query) {
     try {
         const response = await axios.get(`https://bk9.fun/ai/GPT4o`, {
             params: {
-                q: query, 
+                q: query,
                 userId: 'Bitx',
             }
         });
 
         if (response.data.status) {
             const resjson = {
-title:'gemini',
+                title: 'gemini',
                 Power: 'by Bitx❤️',
                 Bitx: response.data.BK9,
             };
@@ -33,15 +37,6 @@ title:'gemini',
     }
 }
 
-module.exports = { chatgpt };
-
-
-
-const { GoogleGenerativeAI } = require("@google/generative-ai");
-
-const genAI = new GoogleGenerativeAI("AIzaSyD6g7ZDG5VANBGC-GFmnzIG29inROwy0u0");
-const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-
 async function gemini(query) {
     if (!query) {
         throw { statusCode: 400, message: 'Query is required' };
@@ -52,9 +47,9 @@ async function gemini(query) {
 
         if (result && result.response) {
             return {
-                title:'gemini',
+                title: 'gemini',
                 Power: 'by Bitx ❤️',
-                Gemini: result.response.text(), // The text response from the model
+                Gemini: result.response.text, // Corrected to access the text property
             };
         } else {
             throw { statusCode: 500, message: 'Failed to get a valid response from Gemini' };
@@ -69,4 +64,4 @@ async function gemini(query) {
     }
 }
 
-module.exports = { gemini };
+module.exports = { chatgpt, gemini };
