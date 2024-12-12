@@ -4,6 +4,10 @@ const { GoogleGenerativeAI } = require("@google/generative-ai");
 const genAI = new GoogleGenerativeAI("AIzaSyD6g7ZDG5VANBGC-GFmnzIG29inROwy0u0");
 const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
 
+
+
+
+
 async function chatgpt(query) {
     if (!query) {
         throw { statusCode: 400, message: 'Query is required' };
@@ -12,14 +16,14 @@ async function chatgpt(query) {
     try {
         const response = await axios.get(`https://bk9.fun/ai/GPT4o`, {
             params: {
-                q: query,
+                q: query, 
                 userId: 'Bitx',
             }
         });
 
         if (response.data.status) {
             const resjson = {
-                title: 'gemini',
+title:'Chat Gpt',
                 Power: 'by Bitx❤️',
                 Bitx: response.data.BK9,
             };
@@ -36,6 +40,8 @@ async function chatgpt(query) {
         throw { statusCode: 500, message: errorMessage, details: error.message || 'Unknown error' };
     }
 }
+
+
 
 
 
