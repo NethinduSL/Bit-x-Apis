@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const { runInfoScript } = require('./BitX/info');
 const { video } = require('./BitX/download');
-const { chatgpt,gemini } = require('./BitX/ai');
+const { chatgpt} = require('./BitX/ai');
 
 const app = express();
 
@@ -60,17 +60,17 @@ app.get('/Gpt-4', (req, res) => {
         });
 });
 
-app.get('/Gemini', (req, res) => {
-    const query = req.query.q;
-
-    gemini(query)
-        .then((gemini) => {
-            res.json(gemini);
-        })
-        .catch((error) => {
-            res.status(error.statusCode || 500).json({ error: error.message });
-        });
-});
+//app.get('/Gemini', (req, res) => {
+//    const query = req.query.q;
+//
+//    gemini(query)
+//        .then((gemini) => {
+//            res.json(gemini);
+//        })
+//        .catch((error) => {
+//            res.status(error.statusCode || 500).json({ error: error.message });
+//        });
+//});
 
 
 
