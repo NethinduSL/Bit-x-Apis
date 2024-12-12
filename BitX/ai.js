@@ -2,7 +2,7 @@ const axios = require('axios');
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 
 const genAI = new GoogleGenerativeAI("AIzaSyD6g7ZDG5VANBGC-GFmnzIG29inROwy0u0");
-const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
 
 async function chatgpt(query) {
     if (!query) {
@@ -37,31 +37,35 @@ async function chatgpt(query) {
     }
 }
 
+
+
 async function gemini(query) {
-    if (!query) {
-        throw { statusCode: 400, message: 'Query is required' };
-    }
+  if (!query) {
+    throw { statusCode: 400, message: 'Query is required' };
+  }
 
-    try {
-        const result = await model.generateContent(query);
+  try {
+    const response = await model.generateText(query);
 
-        if (result && result.response) {
-            return {
-                title: 'gemini',
-                Power: 'by Bitx ❤️',
-                Gemini: result.response.text, // Corrected to access the text property
-            };
-        } else {
-            throw { statusCode: 500, message: 'Failed to get a valid response from Gemini' };
-        }
-    } catch (error) {
-        console.error('Error fetching response from Gemini:', error);
-        let errorMessage = 'Failed to fetch response from Gemini';
-        if (error.message) {
-            errorMessage = error.message;
-        }
-        throw { statusCode: 500, message: errorMessage, details: error.stack || 'Unknown error' };
+    if (response.text) {
+      return {
+        title: 'Gemini',
+        Power: 'by Google AI',
+        Gemini: response.text
+      };
+    } else {
+      throw { statusCode: 500, message: 'Failed to get a valid response from Gemini' };
     }
+  } catch (error) {
+    console.error('Error fetching response from Gemini:', error);
+    let errorMessage = 'Failed to fetch response from Gemini';
+    if (error.message) {
+      errorMessage = error.message;
+    }
+    throw { statusCode: 500, message: errorMessage, details: error.stack || 'Unknown error' };
+  }
 }
+
+
 
 module.exports = { chatgpt, gemini };
