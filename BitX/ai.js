@@ -1,9 +1,4 @@
 const axios = require('axios');
-const { GoogleGenerativeAI } = require("@google/generative-ai");
-
-// Assuming you have a valid API key and model ID
-const genAI = new GoogleGenerativeAI("YOUR_API_KEY");
-const model = genAI.generateContent({ model: 'gemini-1.5-flash-001' });
 
 async function chatgpt(query) {
   if (!query) {
@@ -35,29 +30,6 @@ async function chatgpt(query) {
   }
 }
 
-async function gemini(query) {
-  if (!query) {
-    throw new Error('Query is required'); // More concise error handling
-  }
 
-  try {
-    const response = await model.generateText(query);
 
-    if (response.text) {
-      return {
-        title: 'Gemini',
-        Power: 'by Google AI',
-        response: response.text, // More descriptive property
-      };
-    } else {
-      throw new Error('Failed to get a valid response from Gemini');
-    }
-  } catch (error) {
-    console.error('Error fetching response from Gemini:', error);
-    throw new Error(
-      `Failed to fetch response from Gemini: ${error.message || 'Unknown error'}`,
-    );
-  }
-}
-
-module.exports = { chatgpt, gemini };
+module.exports = { chatgpt};
