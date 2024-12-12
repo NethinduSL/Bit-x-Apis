@@ -1,6 +1,6 @@
 {
   "name": "bitx-api",
-  "version": "1.0.0",
+  "version": "1",
   "description": "Bitx APIs with Express and yt-search",
   "main": "index.js",
   "scripts": {
