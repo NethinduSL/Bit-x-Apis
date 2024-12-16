@@ -3,7 +3,7 @@ const cheerio = require('cheerio');
 
 async function hiru(startId = 390861) {
   // Default starting ID is 390861 if not provided
-  const batchSize = 10; // Number of IDs to check
+  const batchSize = 4; // Number of IDs to check
   const validArticles = []; // To store valid articles
 
   try {
