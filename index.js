@@ -52,15 +52,15 @@ app.get('/Gpt-4', (req, res) => {
         });
 });
 
-app.get('/hiru', (req, res) => { // Mark the function as 'async'
-try {
-    const externalId = req.query.q || 390689;
-    const latestNews = await hiru(externalId); 
-    res.json(latestNews);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }or('Error fetching news:', error.message);
-  }
+app.get('/hiru', async (req, res) => { // Mark the function as 'async'
+    try {
+        const externalId = req.query.q || 390689;
+        const latestNews = await hiru(externalId); 
+        res.json(latestNews);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+        console.error('Error fetching news:', error.message);
+    }
 });
 
 //app.get('/Gemini', (req, res) => {
