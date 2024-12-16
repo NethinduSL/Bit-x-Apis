@@ -4,13 +4,15 @@ const cheerio = require('cheerio');
 async function hiru(startId = 390861) {
   // Default starting ID is 390861 if not provided
   const batchSize = 4; // Number of IDs to check
+  let currentId = startId; // Initialize the current ID
   const validArticles = []; // To store valid articles
 
   try {
-    for (let offset = 0; offset < batchSize; offset++) {
-      const id = startId + offset;
+    let foundNewArticle = true; // Flag to check if a new valid article is found
+
+    while (foundNewArticle) {
       try {
-        const url = `https://www.hirunews.lk/${id}`;
+        const url = `https://www.hirunews.lk/${currentId}`;
         const response = await axios.get(url);
 
         const $ = cheerio.load(response.data);
@@ -21,10 +23,15 @@ async function hiru(startId = 390861) {
         const text = textContainer.html()?.replace(/<br\s*\/?>/gi, '') || '';
 
         if (title && image && text) {
-          validArticles.push({ id, title, image, text });
+          validArticles.push({ id: currentId, title, image, text });
+          console.log(`Fetched article ID: ${currentId}`);
+          currentId++; // Move to the next ID
+        } else {
+          throw new Error(`No valid content for ID ${currentId}`); // Stop fetching when invalid content is found
         }
       } catch (error) {
-        console.warn(`Error processing ID ${id}: ${error.message}`); // Log and continue
+        console.warn(`Error processing ID ${currentId}: ${error.message}`); // Log and continue
+        foundNewArticle = false; // Stop if no valid article found
       }
     }
 
