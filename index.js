@@ -54,11 +54,12 @@ app.get('/Gpt-4', (req, res) => {
 
 app.get('/hiru', async (req, res) => { // Mark the function as 'async'
     try {
-        const latestNews = await hiru(); // Fetch news using the 'hiru' function
-        res.json(latestNews);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
+    const externalId = 390689; // Or any other ID you want to use
+    const newsData = await hiru(externalId); // Calling the hiru function
+    console.log('Latest News:', newsData);
+  } catch (error) {
+    console.error('Error fetching news:', error.message);
+  }
 });
 
 //app.get('/Gemini', (req, res) => {
