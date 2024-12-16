@@ -61,6 +61,18 @@ app.get('/Gpt-4', (req, res) => {
         });
 });
 
+app.get('/news', (req, res) => {
+    const startId = parseInt(req.query.startId) || 390861; // Default to 390861 if not provided
+
+    fetchNewsBatch(startId)
+        .then((result) => {
+            res.json(result); // Send back the fetched news
+        })
+        .catch((error) => {
+            res.status(500).json({ error: error.message || 'Failed to fetch news' }); // Error handling
+        });
+});
+
 //app.get('/Gemini', (req, res) => {
 //    const query = req.query.q;
 //
