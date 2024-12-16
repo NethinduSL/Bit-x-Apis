@@ -1,16 +1,14 @@
 const axios = require('axios');
 const cheerio = require('cheerio');
 
-// Function to fetch and validate news articles
+// Function to fetch the latest valid news article
 async function hiru(startId = 390861) {
   const batchSize = 5; // Number of IDs to check in each batch
-  let validArticles = []; // To store valid articles
-  let lastValidArticle = null; // To track the last valid article
+  let currentId = startId;
+  let latestArticle = null;
 
   try {
-    let currentId = startId;
-
-    while (validArticles.length === 0) {
+    while (!latestArticle) {
       for (let i = 0; i < batchSize; i++) {
         const id = currentId + i;
 
@@ -25,31 +23,25 @@ async function hiru(startId = 390861) {
           textContainer.find('iframe').remove();
           const text = textContainer.html()?.replace(/<br\s*\/?>/gi, '') || '';
 
+          // Validate if the article has required data
           if (title && image && text) {
-            const article = { id, title, image, text };
-            validArticles.push(article); // Add valid article to the list
-            lastValidArticle = article; // Update the latest valid article
+            latestArticle = { id, title, image, text }; // Store the latest valid article
+            break; // Exit the loop once a valid article is found
           }
         } catch (error) {
-          console.warn(`Error processing ID ${id}: ${error.message}`);
+          
         }
       }
 
-      // Move to the next batch if no valid articles are found
-      if (validArticles.length === 0) {
+      // Move to the next batch if no valid article was found
+      if (!latestArticle) {
         currentId += batchSize;
       }
     }
 
-    return {
-      latestArticle: lastValidArticle,
-      validArticles, // All valid articles from the batch
-    };
+    return latestArticle;
   } catch (error) {
-    console.error('Error fetching news batch:', error);
-    throw new Error(
-      `Failed to fetch news batch: ${error.message || 'Unknown error'}`,
-    );
+    throw new Error(`Failed to fetch the latest news: ${error.message || 'Unknown error'}`);
   }
 }
 
