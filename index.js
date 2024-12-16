@@ -52,13 +52,14 @@ app.get('/Gpt-4', (req, res) => {
         });
 });
 
-app.get('/hiru', async (req, res) => { // Mark the function as 'async'
-    try {
-    const externalId = 390689; // Or any other ID you want to use
-    const newsData = await hiru(externalId); // Calling the hiru function
-    console.log('Latest News:', newsData);
+app.get('/hiru', (req, res) => { // Mark the function as 'async'
+try {
+    const externalId = req.query.q || 390689;
+    const latestNews = await hiru(externalId); 
+    res.json(latestNews);
   } catch (error) {
-    console.error('Error fetching news:', error.message);
+    res.status(500).json({ error: error.message });
+  }or('Error fetching news:', error.message);
   }
 });
 
