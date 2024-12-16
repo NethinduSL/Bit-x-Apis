@@ -61,7 +61,7 @@ app.get('/Gpt-4', (req, res) => {
         });
 });
 
-app.get('/news', (req, res) => {
+app.get('/hiru', (req, res) => {
     const startId = parseInt(req.query.startId) || 390861; // Default to 390861 if not provided
 
     hiru(startId)
