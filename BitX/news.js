@@ -3,7 +3,7 @@ const cheerio = require('cheerio');
 
 // Function to fetch the latest valid news article
 async function hiru(startId = 390861) {
-  const batchSize = 5; // Number of IDs to check in each batch
+  const batchSize = 10; // Number of IDs to check in each batch
   let currentId = startId;
   let latestArticle = null;
 
