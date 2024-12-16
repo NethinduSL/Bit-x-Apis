@@ -62,15 +62,11 @@ app.get('/Gpt-4', (req, res) => {
 });
 
 app.get('/hiru', (req, res) => {
-  const startId = parseInt(req.query.startId); // Default to 390861 if not provided
-
-  hiru(startId)
-    .then((latestArticle) => {
-      res.json(latestArticle); // Return the latest valid article
-    })
-    .catch((error) => {
-      res.status(500).json({ error: error.message || 'Failed to fetch the latest news' });
-    });
+  hiru().then(news => {
+    console.log(news); // Latest valid article data
+}).catch(error => {
+    console.error('Error fetching the latest news:', error);
+});
 });
 //app.get('/Gemini', (req, res) => {
 //    const query = req.query.q;
