@@ -22,21 +22,16 @@ async function hiru(startId = 390861) {
           latestArticle = { id: currentId, title, image, text };
           currentId++;
         } else {
-          throw new Error(`No valid content for ID ${currentId}`);
+          currentId++; // Skip invalid article and move to next ID
         }
       } catch (error) {
-        currentId++;
-      }
-
-      if (latestArticle) {
-        return {
-          message: 'Latest valid article fetched successfully',
-          latestArticle,
-        };
+        currentId++; // Skip to next ID on error
       }
     }
   } catch (error) {
-    throw new Error(`Failed to fetch the news: ${error.message || 'Unknown error'}`);
+    return {
+      message: `Failed to fetch the news: ${error.message || 'Unknown error'}`,
+    };
   }
 }
 
