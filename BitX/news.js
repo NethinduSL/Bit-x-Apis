@@ -1,42 +1,50 @@
 const axios = require('axios');
 const cheerio = require('cheerio');
 
+// Function to fetch and validate news articles
 async function hiru(startId = 390861) {
-  // Default starting ID is 390861 if not provided
-  const batchSize = 4; // Number of IDs to check
-  const validArticles = []; // To store valid articles
+  const batchSize = 5; // Number of IDs to check in each batch
+  let validArticles = []; // To store valid articles
+  let lastValidArticle = null; // To track the last valid article
 
   try {
-    for (let offset = 0; offset < batchSize; offset++) {
-      const id = startId + offset;
-      try {
-        const url = `https://www.hirunews.lk/${id}`;
-        const response = await axios.get(url);
+    let currentId = startId;
 
-        const $ = cheerio.load(response.data);
-        const title = $('h1.main-tittle').text().trim();
-        const image = $('img.lazyload').attr('data-src');
-        const textContainer = $('#article-phara2');
-        textContainer.find('iframe').remove();
-        const text = textContainer.html()?.replace(/<br\s*\/?>/gi, '') || '';
+    while (validArticles.length === 0) {
+      for (let i = 0; i < batchSize; i++) {
+        const id = currentId + i;
 
-        if (title && image && text) {
-          validArticles.push({ id, title, image, text });
+        try {
+          const url = `https://www.hirunews.lk/${id}`;
+          const response = await axios.get(url);
+
+          const $ = cheerio.load(response.data);
+          const title = $('h1.main-tittle').text().trim();
+          const image = $('img.lazyload').attr('data-src');
+          const textContainer = $('#article-phara2');
+          textContainer.find('iframe').remove();
+          const text = textContainer.html()?.replace(/<br\s*\/?>/gi, '') || '';
+
+          if (title && image && text) {
+            const article = { id, title, image, text };
+            validArticles.push(article); // Add valid article to the list
+            lastValidArticle = article; // Update the latest valid article
+          }
+        } catch (error) {
+          console.warn(`Error processing ID ${id}: ${error.message}`);
         }
-      } catch (error) {
-        console.warn(`Error processing ID ${id}: ${error.message}`); // Log and continue
+      }
+
+      // Move to the next batch if no valid articles are found
+      if (validArticles.length === 0) {
+        currentId += batchSize;
       }
     }
 
-    if (validArticles.length > 0) {
-      const latestArticle = validArticles[validArticles.length - 1];
-      return {
-        message: 'Latest valid article fetched successfully',
-        latestArticle,
-      };
-    } else {
-      throw new Error('No valid articles found in the given batch');
-    }
+    return {
+      latestArticle: lastValidArticle,
+      validArticles, // All valid articles from the batch
+    };
   } catch (error) {
     console.error('Error fetching news batch:', error);
     throw new Error(
