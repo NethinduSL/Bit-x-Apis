@@ -64,7 +64,7 @@ app.get('/Gpt-4', (req, res) => {
 app.get('/news', (req, res) => {
     const startId = parseInt(req.query.startId) || 390861; // Default to 390861 if not provided
 
-    fetchNewsBatch(startId)
+    hiru(startId)
         .then((result) => {
             res.json(result); // Send back the fetched news
         })
