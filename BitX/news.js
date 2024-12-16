@@ -2,15 +2,11 @@ const axios = require('axios');
 const cheerio = require('cheerio');
 
 async function hiru(startId = 390861) {
-  // Default starting ID is 390861 if not provided
-  const batchSize = 4; // Number of IDs to check
-  let currentId = startId; // Initialize the current ID
-  const validArticles = []; // To store valid articles
+  let currentId = startId;
+  let latestArticle = null;
 
   try {
-    let foundNewArticle = true; // Flag to check if a new valid article is found
-
-    while (foundNewArticle) {
+    while (true) {
       try {
         const url = `https://www.hirunews.lk/${currentId}`;
         const response = await axios.get(url);
@@ -23,32 +19,24 @@ async function hiru(startId = 390861) {
         const text = textContainer.html()?.replace(/<br\s*\/?>/gi, '') || '';
 
         if (title && image && text) {
-          validArticles.push({ id: currentId, title, image, text });
-          console.log(`Fetched article ID: ${currentId}`);
-          currentId++; // Move to the next ID
+          latestArticle = { id: currentId, title, image, text };
+          currentId++;
         } else {
-          throw new Error(`No valid content for ID ${currentId}`); // Stop fetching when invalid content is found
+          throw new Error(`No valid content for ID ${currentId}`);
         }
       } catch (error) {
-        console.warn(`Error processing ID ${currentId}: ${error.message}`); // Log and continue
-        foundNewArticle = false; // Stop if no valid article found
+        currentId++;
+      }
+
+      if (latestArticle) {
+        return {
+          message: 'Latest valid article fetched successfully',
+          latestArticle,
+        };
       }
     }
-
-    if (validArticles.length > 0) {
-      const latestArticle = validArticles[validArticles.length - 1];
-      return {
-        message: 'Latest valid article fetched successfully',
-        latestArticle,
-      };
-    } else {
-      throw new Error('No valid articles found in the given batch');
-    }
   } catch (error) {
-    console.error('Error fetching news batch:', error);
-    throw new Error(
-      `Failed to fetch news batch: ${error.message || 'Unknown error'}`,
-    );
+    throw new Error(`Failed to fetch the news: ${error.message || 'Unknown error'}`);
   }
 }
 
