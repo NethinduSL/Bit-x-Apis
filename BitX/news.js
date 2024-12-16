@@ -1,47 +1,57 @@
 const axios = require('axios');
 const cheerio = require('cheerio');
 
-// Function to fetch the latest valid news article
 async function hiru(startId = 390861) {
-  const batchSize = 10; // Number of IDs to check in each batch
   let currentId = startId;
   let latestArticle = null;
 
-  try {
-    while (!latestArticle) {
-      for (let i = 0; i < batchSize; i++) {
-        const id = currentId + i;
+  while (true) {
+    try {
+      const article = await fetchNewsById(currentId);
 
-        try {
-          const url = `https://www.hirunews.lk/${id}`;
-          const response = await axios.get(url);
+      if (article) {
+        // Found a valid article; update the latest article
+        latestArticle = article;
 
-          const $ = cheerio.load(response.data);
-          const title = $('h1.main-tittle').text().trim();
-          const image = $('img.lazyload').attr('data-src');
-          const textContainer = $('#article-phara2');
-          textContainer.find('iframe').remove();
-          const text = textContainer.html()?.replace(/<br\s*\/?>/gi, '') || '';
-
-          // Validate if the article has required data
-          if (title && image && text) {
-            latestArticle = { id, title, image, text }; // Store the latest valid article
-            break; // Exit the loop once a valid article is found
-          }
-        } catch (error) {
-          
-        }
+        // Move to the next ID for the next check
+        currentId++;
+      } else {
+        // If the current ID fails, stop checking further
+        break;
       }
-
-      // Move to the next batch if no valid article was found
-      if (!latestArticle) {
-        currentId += batchSize;
-      }
+    } catch (error) {
+      console.warn(`Error processing ID ${currentId}: ${error.message}`);
+      break; // Stop if there are consecutive failures
     }
+  }
 
-    return latestArticle;
+  return latestArticle;
+}
+
+// Helper function to fetch a single news article by ID
+async function fetchNewsById(id) {
+  try {
+    const url = `https://www.hirunews.lk/${id}`;
+    const response = await axios.get(url);
+    const $ = cheerio.load(response.data);
+
+    const title = $('h1.main-tittle').text().trim();
+    const image = $('img.lazyload').attr('data-src');
+    const textContainer = $('#article-phara2');
+    textContainer.find('iframe').remove();
+    const text = textContainer.html()?.replace(/<br\s*\/?>/gi, '') || '';
+
+    const dateElement = $('.article-date'); // Adjust the selector if needed
+    const date = dateElement.text().trim();
+
+    // Check if the article has the required fields
+    if (title && image && text && date) {
+      return { id, title, image, text, date };
+    } else {
+      return null; // Invalid article
+    }
   } catch (error) {
-    throw new Error(`Failed to fetch the latest news: ${error.message || 'Unknown error'}`);
+    return null; // Treat as invalid article
   }
 }
 
