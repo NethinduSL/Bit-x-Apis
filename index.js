@@ -3,8 +3,8 @@ const fs = require('fs');
 const path = require('path');
 const { runInfoScript } = require('./BitX/info');
 const { video } = require('./BitX/download');
-const { chatgpt} = require('./BitX/ai');
-const { hiru} = require('./BitX/news');
+const { chatgpt } = require('./BitX/ai');
+const { hiru } = require('./BitX/news');
 
 const app = express();
 
@@ -18,9 +18,6 @@ app.get('/details', (req, res) => {
     res.json({ message: 'Details from About API' });
 });
 
-
-
-
 app.get('/info', (req, res) => {
     runInfoScript()
         .then((infoData) => {
@@ -31,44 +28,39 @@ app.get('/info', (req, res) => {
         });
 });
 
-
-
-
-
 app.get('/video', (req, res) => {
     const query = req.query.q;
 
     video(query)
         .then((videoData) => {
             res.json(videoData);
-        
         })
         .catch((error) => {
             res.status(error.statusCode || 500).json({ error: error.message });
         });
 });
-
 
 app.get('/Gpt-4', (req, res) => {
     const query = req.query.q;
 
     chatgpt(query)
-        .then((chatgpt) => {
-            res.json(chatgpt);
+        .then((chatgptData) => {
+            res.json(chatgptData);
         })
         .catch((error) => {
             res.status(error.statusCode || 500).json({ error: error.message });
         });
 });
 
-app.get('/hiru', (req, res) => {
-  try {
+app.get('/hiru', async (req, res) => { // Mark the function as 'async'
+    try {
         const latestNews = await hiru(); // Fetch news using the 'hiru' function
         res.json(latestNews);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 });
+
 //app.get('/Gemini', (req, res) => {
 //    const query = req.query.q;
 //
@@ -80,9 +72,6 @@ app.get('/hiru', (req, res) => {
 //            res.status(error.statusCode || 500).json({ error: error.message });
 //        });
 //});
-
-
-
 
 app.listen(3000, () => {
     console.log('Server running on http://localhost:3000');
