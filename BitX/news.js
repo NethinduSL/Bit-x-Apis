@@ -2,11 +2,10 @@ const axios = require('axios');
 const cheerio = require('cheerio');
 
 async function hiru(startId = 390861) {
-  let step = 1; // Start with checking one ID at a time
-  let attempts = 0; // Count attempts to find valid articles
-  const maxAttempts = 50; // Maximum number of IDs to check before giving up
+  let consecutiveFailures = 0; // Count consecutive failed attempts
+  let step = 1; // Increment step for searching IDs
 
-  while (attempts < maxAttempts) {
+  while (true) {
     try {
       const url = `https://www.hirunews.lk/${startId}`;
       const response = await axios.get(url);
@@ -20,7 +19,8 @@ async function hiru(startId = 390861) {
       const text = textContainer.html()?.replace(/<br\s*\/?/gi, '') || '';
 
       if (title && image && text) {
-        // Return the latest valid article
+        // If a valid article is found, reset failures and return the article
+        consecutiveFailures = 0;
         return {
           message: 'Latest valid article fetched successfully',
           article: { id: startId, title, image, text },
@@ -32,18 +32,16 @@ async function hiru(startId = 390861) {
       console.warn(`Error processing ID ${startId}: ${error.message}`);
     }
 
-    // Move to the next ID based on the step size
+    // Increment ID and adjust step dynamically if too many failures occur
     startId += step;
-    attempts++;
+    consecutiveFailures++;
 
-    // If too many consecutive failures, increase the step size
-    if (attempts % 10 === 0) {
-      step = Math.min(step + 1, 5); // Cap step size to 5 to avoid skipping too far
-      console.log(`Increasing step size to ${step}`);
+    if (consecutiveFailures >= 5) {
+      step = Math.min(step + 1, 5); // Gradually increase step size
+      console.log(`Consecutive failures reached. Increasing step size to ${step}`);
+      consecutiveFailures = 0; // Reset failure count after increasing step
     }
   }
-
-  throw new Error('Unable to fetch any valid articles within the attempt limit.');
 }
 
 module.exports = { hiru };
