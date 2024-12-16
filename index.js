@@ -62,11 +62,12 @@ app.get('/Gpt-4', (req, res) => {
 });
 
 app.get('/hiru', (req, res) => {
-  hiru().then(news => {
-    console.log(news); // Latest valid article data
-}).catch(error => {
-    console.error('Error fetching the latest news:', error);
-});
+  try {
+        const latestNews = await hiru(); // Fetch news using the 'hiru' function
+        res.json(latestNews);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
 });
 //app.get('/Gemini', (req, res) => {
 //    const query = req.query.q;
