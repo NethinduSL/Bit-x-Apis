@@ -4,6 +4,7 @@ const path = require('path');
 const { runInfoScript } = require('./BitX/info');
 const { video } = require('./BitX/download');
 const { chatgpt} = require('./BitX/ai');
+const { hiru} = require('./BitX/news');
 
 const app = express();
 
