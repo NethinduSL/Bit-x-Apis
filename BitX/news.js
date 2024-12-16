@@ -1,9 +1,8 @@
-const fs = require('fs');
 const axios = require('axios');
 const cheerio = require('cheerio');
 
 const hiru = async () => {
-    let currentId = 390689;
+    let currentId = 390689; // Starting ID
 
     while (true) {
         try {
