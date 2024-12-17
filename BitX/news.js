@@ -5,41 +5,39 @@ async function hiru() {
   const baseURL = 'https://www.hirunews.lk/';
 
   try {
-    // Step 1: Fetch the Hiru News homepage
     const response = await axios.get(baseURL);
     const $ = cheerio.load(response.data);
 
-    // Step 2: Find the 'today-video-tittle' section and extract the first news link
     const latestNewsLink = $('.today-video-tittle')
-      .next('.middle-article') // Move to the middle-article container
-      .find('a')               // Find all <a> tags
-      .first()                 // Get the first news link
-      .attr('href');           // Extract the link
+      .next('.middle-article')
+      .find('a')
+      .first()
+      .attr('href');
 
     if (!latestNewsLink) {
       throw new Error('No latest news link found');
     }
 
     const newsURL = `${latestNewsLink}`;
+    const idMatch = newsURL.match(/\/(\d+)\//); // Match the numeric ID between slashes
+    const id = idMatch ? idMatch[1] : 'Unknown';
 
-    // Step 3: Fetch the individual news page
     const newsResponse = await axios.get(newsURL);
     const newsPage = cheerio.load(newsResponse.data);
 
-    // Extract news details: title, image, and text
     const title = newsPage('h1.main-tittle').text().trim();
     const image = newsPage('img.lazyload').attr('data-src');
 
     const textContainer = newsPage('#article-phara2');
-    textContainer.find('iframe').remove(); // Remove unnecessary iframes
+    textContainer.find('iframe').remove();
     const text = textContainer.html()
-      .replace(/<br\s*\/?>/gi, '')          // Remove <br> tags
-      .replace(/<[^>]*>?/gm, '')           // Remove all remaining HTML tags
+      .replace(/<br\s*\/?>/gi, '')
+      .replace(/<[^>]*>?/gm, '')
       .trim();
 
-    // Return the fetched news data
     return {
       Power: 'by Bitx ❤️',
+      id,
       newsURL,
       title,
       image,
@@ -51,5 +49,4 @@ async function hiru() {
   }
 }
 
-// Example Usage
-module.exports = { hiru};
+module.exports = { hiru };
