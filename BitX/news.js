@@ -1,7 +1,7 @@
 const axios = require('axios');
 const cheerio = require('cheerio');
 
-async function getLatestNews() {
+async function hiru() {
   const baseURL = 'https://www.hirunews.lk/';
 
   try {
@@ -20,7 +20,7 @@ async function getLatestNews() {
       throw new Error('No latest news link found');
     }
 
-    const newsURL = `${baseURL}${latestNewsLink}`;
+    const newsURL = `${latestNewsLink}`;
 
     // Step 3: Fetch the individual news page
     const newsResponse = await axios.get(newsURL);
@@ -52,11 +52,4 @@ async function getLatestNews() {
 }
 
 // Example Usage
-(async () => {
-  try {
-    const news = await getLatestNews();
-    console.log('Latest News:', news);
-  } catch (error) {
-    console.error(error.message);
-  }
-})();
+module.exports = { hiru};
