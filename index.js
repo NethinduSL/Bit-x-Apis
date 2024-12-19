@@ -5,6 +5,7 @@ const { runInfoScript } = require('./BitX/info');
 const { video } = require('./BitX/download');
 const { chatgpt } = require('./BitX/ai');
 const { hiru } = require('./BitX/news');
+const { fetchMovies, getDownloadLinks, getDownloadLinkFromPixeldrain } = require('./BitX/Movie');
 
 const app = express();
 
@@ -74,6 +75,46 @@ app.get('/hiru', async (req, res) => { // Mark the function as 'async'
 //            res.status(error.statusCode || 500).json({ error: error.message });
 //        });
 //});
+
+
+
+
+app.get("/m", async (req, res) => {
+  const { query } = req.query;
+
+  if (!query) {
+    return res.status(400).json({ error: "Query parameter is required." });
+  }
+
+  try {
+    const movies = await fetchMovies(query);
+    res.json({ status: "success", data: movies });
+  } catch (error) {
+    res.status(500).json({ status: "error", message: error.message });
+  }
+});
+
+app.get('/dl', async (req, res) => {
+  const link = req.query.q;
+
+  try {
+    const downloadLinks = await getDownloadLinks(link);
+    res.json({ powered: 'By Bitx❤️', downloadLinks });
+  } catch (error) {
+    res.status(500).send('Error scraping data');
+  }
+});
+
+app.get('/dll', async (req, res) => {
+  const link = req.query.q;
+
+  try {
+    const { originalLink, apiLink } = await getDownloadLinkFromPixeldrain(link);
+    res.json({ powered: 'By Bitx❤️', originalLink, apiLink });
+  } catch (error) {
+    res.status(500).send('Error scraping data');
+  }
+});
 
 app.listen(3000, () => {
     console.log('Server running on http://localhost:3000');
