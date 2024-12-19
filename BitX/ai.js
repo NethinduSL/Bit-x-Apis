@@ -2,7 +2,7 @@ const axios = require('axios');
 
 async function chatgpt(query) {
   if (!query) {
-    throw new Error('Query is required'); // More concise error handling
+    throw new Error('Query is required'); // Error if no query is provided
   }
 
   try {
@@ -13,23 +13,22 @@ async function chatgpt(query) {
       },
     });
 
-    if (response.data.status) {
+    // Check for valid response status
+    if (response.data?.status) {
       return {
         title: 'ChatGPT',
-        Power: 'by Bitx❤️',
-        response: response.data.BK9, // More descriptive property
+        poweredBy: 'by Bitx❤️',
+        response: response.data.BK9, // Return the appropriate field
       };
     } else {
       throw new Error('Failed to get a valid response from ChatGPT');
     }
   } catch (error) {
-    console.error('Error fetching response from ChatGPT:', error);
+    console.error('Error fetching response from ChatGPT:', error.message);
     throw new Error(
-      `Failed to fetch response from ChatGPT: ${error.message || 'Unknown error'}`,
+      `Failed to fetch response from ChatGPT: ${error.message || 'Unknown error'}`
     );
   }
 }
 
-
-
-module.exports = { chatgpt};
+module.exports = { chatgpt };
