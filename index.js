@@ -79,7 +79,7 @@ app.get('/hiru', async (req, res) => { // Mark the function as 'async'
 
 
 
-app.get("/m", async (req, res) => {
+app.get("/movie", async (req, res) => {
   const { query } = req.query;
 
   if (!query) {
@@ -94,7 +94,7 @@ app.get("/m", async (req, res) => {
   }
 });
 
-app.get('/dl', async (req, res) => {
+app.get('/moviedl', async (req, res) => {
   const link = req.query.q;
 
   try {
@@ -105,7 +105,7 @@ app.get('/dl', async (req, res) => {
   }
 });
 
-app.get('/dll', async (req, res) => {
+app.get('/moviedll', async (req, res) => {
   const link = req.query.q;
 
   try {
