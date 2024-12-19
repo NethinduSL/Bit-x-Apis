@@ -5,7 +5,7 @@ const { runInfoScript } = require('./BitX/info');
 const { video } = require('./BitX/download');
 const { chatgpt } = require('./BitX/ai');
 const { hiru } = require('./BitX/news');
-const { fetchMovies, getDownloadLinks, getDownloadLinkFromPixeldrain } = require('./BitX/Movie');
+const { fetchMovies, getDownloadLinks, getDownloadLinkFromPixeldrain } = require('./BitX/movie');
 
 const app = express();
 
