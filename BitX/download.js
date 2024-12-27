@@ -12,15 +12,19 @@ async function video(query) {
             throw { statusCode: 404, message: 'No videos found for the search query' };
         }
 
-        const video = results.videos[0];
+        // Get the first 10 videos from the results
+        const videos = results.videos.slice(0, 10);
 
-        return {
+        // Map the video details
+        const videoDetails = videos.map(video => ({
             powered: 'By Bitx❤️',
             title: video.title,
             viewCount: video.views,
             downloadUrl: video.url,
             thumbnailUrl: video.thumbnail
-        };
+        }));
+
+        return videoDetails;
     } catch (error) {
         throw { statusCode: 500, message: 'Failed to fetch video details', details: error.message };
     }
