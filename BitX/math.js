@@ -8,7 +8,7 @@ async function chatgpt(query) {
   try {
     const response = await axios.get('https://api.nexoracle.com/ai/math', {
       params: {
-        q: query,
+        prompt: query,
         apikey: 'free_key@maher_apis',
       },
     });
