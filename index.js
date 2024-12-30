@@ -4,6 +4,7 @@ const path = require('path');
 const { runInfoScript } = require('./BitX/info');
 const { video } = require('./BitX/download');
 const { chatgpt } = require('./BitX/ai');
+const { chatgpt } = require('./BitX/math');
 const { hiru } = require('./BitX/news');
 const { fetchMovies, getDownloadLinks, getDownloadLinkFromPixeldrain } = require('./BitX/movie');
 
@@ -47,6 +48,18 @@ app.get('/Gpt-4', (req, res) => {
     chatgpt(query)
         .then((chatgptData) => {
             res.json(chatgptData);
+        })
+        .catch((error) => {
+            res.status(error.statusCode || 500).json({ error: error.message });
+        });
+});
+
+app.get('/math', (req, res) => {
+    const query = req.query.q;
+
+    math(query)
+        .then((mathData) => {
+            res.json(mathData);
         })
         .catch((error) => {
             res.status(error.statusCode || 500).json({ error: error.message });
