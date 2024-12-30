@@ -6,10 +6,10 @@ async function chatgpt(query) {
   }
 
   try {
-    const response = await axios.get('https://api.nexoracle.com/ai/math?', {
+    const response = await axios.get('https://api.nexoracle.com/ai/math', {
       params: {
         q: query,
-        apikey: '87485c41f2316c31',
+        apikey: 'free_key@maher_apis',
       },
     });
 
