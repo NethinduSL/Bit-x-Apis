@@ -1,6 +1,6 @@
 const axios = require('axios');
 
-async function chatgpt(query) {
+async function math(query) {
   if (!query) {
     throw new Error('Query is required'); // Error if no query is provided
   }
