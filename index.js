@@ -4,7 +4,7 @@ const path = require('path');
 const { runInfoScript } = require('./BitX/info');
 const { video } = require('./BitX/download');
 const { chatgpt } = require('./BitX/ai');
-const { chatgpt } = require('./BitX/math');
+const { math } = require('./BitX/math'); // Renamed to avoid conflict
 const { hiru } = require('./BitX/news');
 const { fetchMovies, getDownloadLinks, getDownloadLinkFromPixeldrain } = require('./BitX/movie');
 
@@ -66,10 +66,10 @@ app.get('/math', (req, res) => {
         });
 });
 
-app.get('/hiru', async (req, res) => { // Mark the function as 'async'
+app.get('/hiru', async (req, res) => {
     try {
         const externalId = req.query.q || 390689;
-        const latestNews = await hiru(externalId); 
+        const latestNews = await hiru(externalId);
         res.json(latestNews);
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -77,59 +77,56 @@ app.get('/hiru', async (req, res) => { // Mark the function as 'async'
     }
 });
 
-//app.get('/Gemini', (req, res) => {
-//    const query = req.query.q;
-//
-//    gemini(query)
-//        .then((gemini) => {
-//            res.json(gemini);
-//        })
-//        .catch((error) => {
-//            res.status(error.statusCode || 500).json({ error: error.message });
-//        });
-//});
-
-
-
+// Uncomment if you want to use the gemini route
+// app.get('/Gemini', (req, res) => {
+//     const query = req.query.q;
+//     gemini(query)
+//         .then((gemini) => {
+//             res.json(gemini);
+//         })
+//         .catch((error) => {
+//             res.status(error.statusCode || 500).json({ error: error.message });
+//         });
+// });
 
 app.get("/movie", async (req, res) => {
-  const { query } = req.query;
+    const query = req.query.query; // Changed to match the expected parameter
 
-  if (!query) {
-    return res.status(400).json({ error: "Query parameter is required." });
-  }
+    if (!query) {
+        return res.status(400).json({ error: "Query parameter is required." });
+    }
 
-  try {
-    const movies = await fetchMovies(query);
-    res.json({ status: "success", data: movies });
-  } catch (error) {
-    res.status(500).json({ status: "error", message: error.message });
-  }
+    try {
+        const movies = await fetchMovies(query);
+        res.json({ status: "success", data: movies });
+    } catch (error) {
+        res.status(500).json({ status: "error", message: error.message });
+    }
 });
 
 app.get('/moviedl', async (req, res) => {
-  const link = req.query.q;
+    const link = req.query.q;
 
-  try {
-    const downloadLinks = await getDownloadLinks(link);
-    res.json({ powered: 'By Bitx❤️', downloadLinks });
-  } catch (error) {
-    res.status(500).send('Error scraping data');
-  }
+    try {
+        const downloadLinks = await getDownloadLinks(link);
+        res.json({ powered: 'By Bitx❤️', downloadLinks });
+    } catch (error) {
+        res.status(500).send('Error scraping data');
+    }
 });
 
 app.get('/moviedll', async (req, res) => {
-  const link = req.query.q;
+    const link = req.query.q;
 
-  try {
-    const { originalLink, apiLink } = await getDownloadLinkFromPixeldrain(link);
-    res.json({ powered: 'By Bitx❤️', originalLink, apiLink });
-  } catch (error) {
-    res.status(500).send('Error scraping data');
-  }
+    try {
+        const { originalLink, apiLink } = await getDownloadLinkFromPixeldrain(link);
+        res.json({ powered: 'By Bitx❤️', originalLink, apiLink });
+    } catch (error) {
+        res.status(500).send('Error scraping data');
+    }
 });
 
-app.listen(3000, () => {
+app.listen(3000 , () => {
     console.log('Server running on http://localhost:3000');
 });
 
