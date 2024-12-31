@@ -16,8 +16,9 @@ async function math(query) {
     // Check for valid response status
     if (response.data?.status) {
       return {
+        "powerd": "By Bitx❤️",
         title: 'Math AI',
-        poweredBy: 'Team Bit X',
+      
         response: response.data.result, // Return the appropriate field
       };
     } else {
