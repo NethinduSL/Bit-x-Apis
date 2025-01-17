@@ -232,6 +232,30 @@
                 <div class="stat-card">
                     <h3>Visit Count</h3>
                     <p>1200</p>
+                    <div id="visit-counter">
+    Visits: <span id="visit-count" style="margin-left: 10px;">0</span>
+  </div>
+
+  <script>
+    // Get the visit count from localStorage
+    let visitCount = localStorage.getItem('visitCount');
+
+    // If no visits are recorded, initialize it
+    if (!visitCount) {
+      visitCount = 0;
+    } else {
+      visitCount = parseInt(visitCount);
+    }
+
+    // Increment the visit count
+    visitCount += 1;
+
+    // Update the localStorage with the new count
+    localStorage.setItem('visitCount', visitCount);
+
+    // Display the count in the div
+    document.getElementById('visit-count').innerText = visitCount;
+  </script>
                 </div>
             </div>
         </section>
