@@ -26,6 +26,7 @@ async function mahindaNews() {
     const views = newsPage('span.jl_view_options').text().trim();
 
     return {
+      Info: 'by Mahinda TV 💛🖤',
       Power: 'by Bitx ❤️',
       newsURL,
       title,
