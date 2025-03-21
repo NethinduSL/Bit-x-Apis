@@ -222,40 +222,75 @@
                     <p id="current-time">--:--:--</p>
                 </div>
                 <div class="stat-card">
-                    <h3>Uptime</h3>
-                    <p>12 hrs</p>
-                </div>
-                <div class="stat-card">
-                    <h3>RAM Usage</h3>
-                    <p>512 MB</p>
-                </div>
-                <div class="stat-card">
-                    <h3>Visit Count</h3>
-                
-                    <div id="visit-counter">
-    <p></p><span id="visit-count" style="margin-left: 10px;">0</span>
-  </div></p>
+    <h3>Uptime</h3>
+    <p id="uptime"></p>
+</div>
 
-  <script>
-    // Get the visit count from localStorage
-    let visitCount = localStorage.getItem('visitCount');
+<script>
+    function updateUptime() {
+        const startTime = new Date("2024-12-25T00:00:00Z"); // Set your start date
+        const now = new Date();
+        const diff = now - startTime; // Difference in milliseconds
 
-    // If no visits are recorded, initialize it
-    if (!visitCount) {
-      visitCount = 0;
-    } else {
-      visitCount = parseInt(visitCount);
+        const seconds = Math.floor(diff / 1000) % 60;
+        const minutes = Math.floor(diff / (1000 * 60)) % 60;
+        const hours = Math.floor(diff / (1000 * 60 * 60)) % 24;
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+
+        document.getElementById("uptime").textContent = 
+            `${days} days, ${hours} hrs, ${minutes} mins, ${seconds} secs`;
     }
 
-    // Increment the visit count
-    visitCount += 1;
+    updateUptime(); // Initial call
+    setInterval(updateUptime, 1000); // Update every second
+</script>
 
-    // Update the localStorage with the new count
-    localStorage.setItem('visitCount', visitCount);
+                <div class="stat-card">
+    <h3>RAM Usage</h3>
+    <p id="ram-usage"></p>
+</div>
 
-    // Display the count in the div
-    document.getElementById('visit-count').innerText = visitCount;
-  </script>
+<script>
+    function updateFakeRAMUsage() {
+        const minRAM = 3.5; // Minimum fake RAM usage in GB
+        const maxRAM = 8;   // Maximum fake RAM usage in GB
+
+        // Generate a random RAM usage value within range
+        const fakeRAM = (Math.random() * (maxRAM - minRAM) + minRAM).toFixed(2);
+
+        document.getElementById("ram-usage").textContent = `${fakeRAM} GB`;
+    }
+
+    updateFakeRAMUsage(); // Initial update
+    setInterval(updateFakeRAMUsage, 3000); // Update every 3 seconds
+</script>
+
+                
+
+ <div class="stat-card">
+    <h3>Visit Count</h3>
+    <div id="visit-counter">
+        <p><span id="visit-count" style="margin-left: 10px;">0</span></p>
+    </div>
+</div>
+
+<script>
+    function updateVisitCount() {
+        let count = localStorage.getItem("visitCount");
+
+        if (!count) {
+            count = 1; // First visit
+        } else {
+            count = parseInt(count) + 1; // Increment count
+        }
+
+        localStorage.setItem("visitCount", count);
+        document.getElementById("visit-count").textContent = count;
+    }
+
+    updateVisitCount(); // Call function on page load
+</script>
+ 
                 </div>
             </div>
         </section>
