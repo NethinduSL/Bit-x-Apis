@@ -6,6 +6,7 @@ const { video } = require('./BitX/download');
 const { chatgpt } = require('./BitX/ai');
 const { math } = require('./BitX/math'); // Renamed to avoid conflict
 const { hiru } = require('./BitX/news');
+const {  mahindaNews } = require('./BitX/mahindaNews');
 const { fetchMovies, getDownloadLinks, getDownloadLinkFromPixeldrain } = require('./BitX/movie');
 
 const app = express();
@@ -76,6 +77,20 @@ app.get('/hiru', async (req, res) => {
         console.error('Error fetching news:', error.message);
     }
 });
+
+app.get('/mahindatv', async (req, res) => {
+    try {
+        
+        const latestNews = await mahindaNews();
+        res.json(latestNews);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+        console.error('Error fetching news:', error.message);
+    }
+});
+
+
+        
 
 // Uncomment if you want to use the gemini route
 // app.get('/Gemini', (req, res) => {
