@@ -22,7 +22,7 @@ async function mahindaNews() {
     const image = newsPage('img.jl-lazyload').attr('data-src');
     const text = newsPage('p.has-drop-cap').text().trim();
     const date = newsPage('span.post-date').text().trim();
-    const caption = newsPage('p strong').text().trim();
+    const msg = newsPage('p strong').text().trim();
     const views = newsPage('span.jl_view_options').text().trim();
 
     return {
@@ -33,7 +33,7 @@ async function mahindaNews() {
       image,
       text,
       date,
-      caption,
+      msg,
       views,
     };
   } catch (error) {
