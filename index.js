@@ -2,7 +2,7 @@ const express = require('express');
 const fs = require('fs');
 const path = require('path');
 const { runInfoScript } = require('./BitX/info');
-const { video } = require('./BitX/download');
+const { video, downloadVideo } = require('./BitX/download');
 const { chatgpt } = require('./BitX/ai');
 const { math } = require('./BitX/math'); // Renamed to avoid conflict
 const { hiru } = require('./BitX/news');
@@ -41,6 +41,25 @@ app.get('/video', (req, res) => {
         .catch((error) => {
             res.status(error.statusCode || 500).json({ error: error.message });
         });
+});
+app.get('/api/download', async (req, res) => {
+    try {
+        const videoId = req.query.videoId;
+        
+        if (!videoId) {
+            return res.status(400).json({ error: 'Video ID is required' });
+        }
+        
+        await downloadVideo(videoId, res);
+        // Note: downloadVideo function handles the response
+    } catch (error) {
+        console.error('Download error:', error);
+        res.status(error.statusCode || 500).json({ 
+            error: true, 
+            message: error.message,
+            details: error.details 
+        });
+    }
 });
 
 app.get('/Gpt-4', (req, res) => {
