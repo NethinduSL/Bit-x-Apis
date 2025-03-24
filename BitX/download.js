@@ -1,5 +1,5 @@
 const ytSearch = require('yt-search');
-const youtubeDl = require('youtube-dl-exec'); // This package will handle both youtube-dl and yt-dlp
+const youtubeDl = require('youtube-dl-exec');
 const fs = require('fs');
 const path = require('path');
 
@@ -34,11 +34,8 @@ async function video(query) {
     }
 }
 
-// Create temp directory if it doesn't exist
-const tempDir = path.join(process.cwd(), 'temp');
-if (!fs.existsSync(tempDir)) {
-    fs.mkdirSync(tempDir);
-}
+// Use /tmp directory which is writable in most serverless environments
+const tempDir = '/tmp';
 
 // New function to handle the actual download
 async function downloadVideo(videoId, res) {
