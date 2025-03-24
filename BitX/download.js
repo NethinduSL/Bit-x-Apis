@@ -1,5 +1,5 @@
 const ytSearch = require('yt-search');
-const { alldl } = require('rahad-all-downloader');
+
 
 async function video(query) {
     if (!query) {
@@ -29,32 +29,6 @@ async function video(query) {
         return videoDetails;
     } catch (error) {
         throw { statusCode: 500, message: 'Failed to fetch video details', details: error.message };
-    }
-}
-
-async function downloadVideo(videoId, res) {
-    if (!videoId) {
-        throw { statusCode: 400, message: 'Video ID is required' };
-    }
-
-    try {
-        const videoUrl = `https://www.youtube.com/watch?v=${videoId}`;
-        const result = await alldl(videoUrl);
-
-        if (!result || !result.data || !result.data.videoUrl) {
-            throw { statusCode: 500, message: 'Invalid response from video downloader' };
-        }
-
-        const videoDetails = {
-            powered: 'By Bitx❤️',
-            title: result.data.title || 'Unknown Title',
-            url: result.data.videoUrl
-        };
-
-        res.json({ success: true, video: videoDetails });
-    } catch (error) {
-        console.error('Error:', error.message);
-        res.status(500).json({ success: false, message: 'Failed to download video', details: error.message });
     }
 }
 
