@@ -1,5 +1,5 @@
 const ytSearch = require('yt-search');
-const ytdl = require('ytdl-core'); // You'll need to install this package
+const playdl = require('play-dl'); // You'll need to install this package
 
 async function video(query) {
     if (!query) {
@@ -39,18 +39,22 @@ async function downloadVideo(videoId, res) {
     }
 
     try {
-        const info = await ytdl.getInfo(videoId);
-        const title = info.videoDetails.title.replace(/[^\w\s]/gi, '_');
+        // Get video info
+        const videoInfo = await playdl.video_info(`https://www.youtube.com/watch?v=${videoId}`);
+        const videoDetails = videoInfo.video_details;
+        const title = videoDetails.title.replace(/[^\w\s]/gi, '_');
+        
+        // Get the best quality format
+        const formats = videoInfo.format;
+        const highestQualityFormat = playdl.chooseFormat(formats, { quality: 'highest', filter: 'videoandaudio' });
         
         // Set headers to force download
         res.setHeader('Content-Disposition', `attachment; filename="${title}.mp4"`);
         res.setHeader('Content-Type', 'video/mp4');
         
-        // Pipe the video stream to the response
-        ytdl(videoId, {
-            format: 'mp4',
-            quality: 'highest'
-        }).pipe(res);
+        // Create a readable stream from the video URL and pipe it to the response
+        const stream = await playdl.stream_from_info(videoInfo, { format: highestQualityFormat });
+        stream.stream.pipe(res);
         
     } catch (error) {
         throw { statusCode: 500, message: 'Failed to download video', details: error.message };
