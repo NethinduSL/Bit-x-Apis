@@ -2,7 +2,7 @@ const express = require('express');
 const fs = require('fs');
 const path = require('path');
 const { runInfoScript } = require('./BitX/info');
-const { video, downloadVideo } = require('./BitX/download');
+const { video } = require('./BitX/download');
 const { chatgpt } = require('./BitX/ai');
 const { math } = require('./BitX/math'); // Renamed to avoid conflict
 const { hiru } = require('./BitX/news');
@@ -42,7 +42,7 @@ app.get('/video', (req, res) => {
             res.status(error.statusCode || 500).json({ error: error.message });
         });
 });
-app.get('/api/download', async (req, res) => {
+/*app.get('/api/download', async (req, res) => {
     try {
         const videoId = req.query.videoId;
         
@@ -61,7 +61,7 @@ app.get('/api/download', async (req, res) => {
         });
     }
 });
-
+*/
 app.get('/Gpt-4', (req, res) => {
     const query = req.query.q;
 
