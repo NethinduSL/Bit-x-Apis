@@ -14,7 +14,7 @@
     "axios": "^1.2.5",
     "cheerio": "^1.0.0-rc.12",
     "cors": "^2.8.5",
-    "play-dl":"1.9.7"
+    "youtube-dl-exec":"3.0.19"
 
   },
   "devDependencies": {
