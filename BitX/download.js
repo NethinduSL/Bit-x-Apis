@@ -1,5 +1,7 @@
 const ytSearch = require('yt-search');
-const playdl = require('play-dl'); // You'll need to install this package
+const youtubeDl = require('youtube-dl-exec'); // This package will handle both youtube-dl and yt-dlp
+const fs = require('fs');
+const path = require('path');
 
 async function video(query) {
     if (!query) {
@@ -32,31 +34,66 @@ async function video(query) {
     }
 }
 
+// Create temp directory if it doesn't exist
+const tempDir = path.join(process.cwd(), 'temp');
+if (!fs.existsSync(tempDir)) {
+    fs.mkdirSync(tempDir);
+}
+
 // New function to handle the actual download
 async function downloadVideo(videoId, res) {
     if (!videoId) {
         throw { statusCode: 400, message: 'Video ID is required' };
     }
 
+    const videoUrl = `https://www.youtube.com/watch?v=${videoId}`;
+    const tempFilePath = path.join(tempDir, `${videoId}-${Date.now()}.mp4`);
+
     try {
-        // Get video info
-        const videoInfo = await playdl.video_info(`https://www.youtube.com/watch?v=${videoId}`);
-        const videoDetails = videoInfo.video_details;
-        const title = videoDetails.title.replace(/[^\w\s]/gi, '_');
-        
-        // Get the best quality format
-        const formats = videoInfo.format;
-        const highestQualityFormat = playdl.chooseFormat(formats, { quality: 'highest', filter: 'videoandaudio' });
-        
-        // Set headers to force download
+        // First get video info to get the title
+        const info = await youtubeDl(videoUrl, {
+            dumpSingleJson: true,
+            noCheckCertificates: true,
+            noWarnings: true,
+            preferFreeFormats: true,
+            youtubeSkipDashManifest: true,
+        });
+
+        // Clean the title for filename
+        const title = info.title.replace(/[^\w\s]/gi, '_');
+
+        // Download video
+        await youtubeDl(videoUrl, {
+            output: tempFilePath,
+            format: 'best[ext=mp4]',
+            noCheckCertificates: true,
+            noWarnings: true,
+        });
+
+        // Set headers for download
         res.setHeader('Content-Disposition', `attachment; filename="${title}.mp4"`);
         res.setHeader('Content-Type', 'video/mp4');
-        
-        // Create a readable stream from the video URL and pipe it to the response
-        const stream = await playdl.stream_from_info(videoInfo, { format: highestQualityFormat });
-        stream.stream.pipe(res);
-        
+
+        // Stream the file to the response
+        const fileStream = fs.createReadStream(tempFilePath);
+        fileStream.pipe(res);
+
+        // Clean up temp file when done
+        fileStream.on('end', () => {
+            fs.unlink(tempFilePath, (err) => {
+                if (err) console.error(`Failed to delete temporary file: ${err.message}`);
+            });
+        });
+
     } catch (error) {
+        // Clean up any partial file
+        if (fs.existsSync(tempFilePath)) {
+            try {
+                fs.unlinkSync(tempFilePath);
+            } catch (unlinkError) {
+                console.error('Failed to delete partial file:', unlinkError);
+            }
+        }
         throw { statusCode: 500, message: 'Failed to download video', details: error.message };
     }
 }
