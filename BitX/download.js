@@ -1,7 +1,5 @@
 const ytSearch = require('yt-search');
-const y2mate = require('y2mate-api');
-const http = require('http');
-const https = require('https');
+const { alldl } = require('rahad-all-downloader');
 
 async function video(query) {
     if (!query) {
@@ -34,83 +32,35 @@ async function video(query) {
     }
 }
 
-// Function to download file from URL and pipe to response
-function downloadFromUrl(url, filename, res) {
-    return new Promise((resolve, reject) => {
-        const protocol = url.startsWith('https') ? https : http;
-        
-        protocol.get(url, (response) => {
-            // Check if the response is a redirect
-            if (response.statusCode === 302 || response.statusCode === 301) {
-                downloadFromUrl(response.headers.location, filename, res)
-                    .then(resolve)
-                    .catch(reject);
-                return;
-            }
-            
-            // Handle response errors
-            if (response.statusCode !== 200) {
-                reject(new Error(`Failed to download: ${response.statusCode}`));
-                return;
-            }
-            
-            // Set headers for file download
-            res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
-            res.setHeader('Content-Type', 'video/mp4');
-            
-            // Pipe the response to client
-            response.pipe(res);
-            
-            // Handle completion and errors
-            response.on('end', () => resolve());
-            response.on('error', (err) => reject(err));
-        }).on('error', (err) => {
-            reject(err);
-        });
-    });
-}
-
-// New function to handle the actual download
 async function downloadVideo(videoId, res) {
     if (!videoId) {
         throw { statusCode: 400, message: 'Video ID is required' };
     }
 
     try {
-        // Get downloadable links using y2mate
         const videoUrl = `https://www.youtube.com/watch?v=${videoId}`;
-        const videoInfo = await y2mate.getVideoInfo(videoUrl);
-        
-        // Clean the title for filename
-        const title = videoInfo.title.replace(/[^\w\s]/gi, '_');
-        const filename = `${title}.mp4`;
-        
-        // Get download links for all available formats
-        const links = await y2mate.getDownloadLinks(videoUrl);
-        
-        // Find the highest quality MP4 link
-        let downloadLink = null;
-        const mp4Formats = links.filter(link => link.type === 'mp4');
-        
-        if (mp4Formats.length > 0) {
-            // Sort by quality (highest first)
-            mp4Formats.sort((a, b) => {
-                const qualityA = parseInt(a.quality.replace('p', ''));
-                const qualityB = parseInt(b.quality.replace('p', ''));
-                return qualityB - qualityA;
-            });
-            
-            downloadLink = mp4Formats[0].url;
-        } else {
-            throw new Error('No MP4 download links available');
+        const result = await alldl(videoUrl);
+
+        if (!result || !result.data || !result.data.videoUrl) {
+            throw { statusCode: 500, message: 'Invalid response from video downloader' };
         }
-        
-        // Download and pipe to response
-        await downloadFromUrl(downloadLink, filename, res);
-        
+
+        const videoDetails = {
+            powered: 'By Bitx❤️',
+            title: result.data.title || 'Unknown Title',
+            url: result.data.videoUrl
+        };
+
+        res.json({ success: true, video: videoDetails });
     } catch (error) {
-        throw { statusCode: 500, message: 'Failed to download video', details: error.message };
+        console.error('Error:', error.message);
+        res.status(500).json({ success: false, message: 'Failed to download video', details: error.message });
     }
 }
+
+
+
+
+
 
 module.exports = { video, downloadVideo };
