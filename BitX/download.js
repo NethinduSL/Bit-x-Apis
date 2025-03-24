@@ -37,4 +37,4 @@ async function video(query) {
 
 
 
-module.exports = { video, downloadVideo };
+module.exports = { video};
