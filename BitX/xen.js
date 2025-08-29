@@ -1,4 +1,4 @@
-const data = require("./dta.js");
+const data = require("dta.js");
 const ipRequests = new Map(); // Track requests per IP
 
 async function xen(query, ip) {
