@@ -1,6 +1,8 @@
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
+const cors = require('cors');
+
 const { runInfoScript } = require('./BitX/info');
 const { video } = require('./BitX/download');
 const { chatgpt } = require('./BitX/ai');
@@ -13,6 +15,7 @@ const { fetchMovies, getDownloadLinks, getDownloadLinkFromPixeldrain } = require
 
 const app = express();
 
+app.use(cors()); // <-- add this
 app.use(express.json());
 
 app.get('/', (req, res) => {
