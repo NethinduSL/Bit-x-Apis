@@ -1,6 +1,6 @@
 // dta.js
 const data = {
-  "2356(": {
+  "2356": {
     name: "hi",
     link: "link1",
     price: "40RS",
