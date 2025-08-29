@@ -1,5 +1,5 @@
-// xen.js
-const data = require("./dta.js");  // <-- FIXED
+// old: const data = require("./dta.js");
+const data = require("./data.js");  // <-- updated to data.js
 
 async function xen(query, ip) {
   if (!query) throw new Error("Query is required");
