@@ -1,6 +1,6 @@
 // dta.js
 const data = {
-  "87-==(": {
+  "2356(": {
     name: "hi",
     link: "link1",
     price: "40RS",
@@ -8,7 +8,7 @@ const data = {
     maxtimesperip: 5,      // how many times one IP can view
     iptime: {}             // per-IP counters
   },
-  "99-@@": {
+  "99-((": {
     name: "hello",
     link: "link2",
     price: "100RS",
