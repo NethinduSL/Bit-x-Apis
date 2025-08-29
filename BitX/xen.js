@@ -1,27 +1,28 @@
-const data = require("./BitX/dta.js");
+// xen.js
+const data = require("./dta.js");
 
 async function xen(query, ip) {
   if (!query) throw new Error("Query is required");
   if (!ip) throw new Error("IP is required");
 
-  // Check if query exists
+  // Check if query exists in data
   if (!data[query]) {
     throw new Error("No item found for this query");
   }
 
   const item = data[query];
 
-  // If global ended
+  // If global times ended
   if (item.times <= 0) {
     return data.end;
   }
 
-  // Initialize IP if not set
+  // Initialize iptime if not set
   if (!item.iptime[ip]) {
     item.iptime[ip] = item.maxtimesperip;
   }
 
-  // If IP ended
+  // If this IP’s times ended
   if (item.iptime[ip] <= 0) {
     return {
       ...item,
@@ -31,11 +32,11 @@ async function xen(query, ip) {
     };
   }
 
-  // Reduce counts
+  // Reduce both global and IP-specific counts
   item.times -= 1;
   item.iptime[ip] -= 1;
 
-  // If global ended after this
+  // If global ended after this request
   if (item.times <= 0) {
     return data.end;
   }
@@ -44,8 +45,8 @@ async function xen(query, ip) {
     name: item.name,
     link: item.link,
     price: item.price,
-    times: item.times,
-    iptime: item.iptime[ip]
+    times: item.times,       // global remaining
+    iptime: item.iptime[ip]  // this IP’s remaining
   };
 }
 
