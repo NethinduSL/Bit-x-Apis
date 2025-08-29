@@ -1,35 +1,36 @@
 const data = require("dta.js");
-const ipRequests = new Map(); // Track requests per IP
 
 async function xen(query, ip) {
   if (!query) throw new Error("Query is required");
   if (!ip) throw new Error("IP is required");
 
-  const key = "start"; // current main key
+  const key = "start";
 
-  // If already ended
+  // If global ended → return end
   if (data[key].times <= 0) {
     return data.end;
   }
 
-  // Track IP usage
-  if (!ipRequests.has(ip)) {
-    ipRequests.set(ip, 0);
+  // Initialize IP times if not set
+  if (!data[key].iptime[ip]) {
+    data[key].iptime[ip] = data[key].maxtimesperip; // use config from dta.js
   }
 
-  // If IP already viewed, don’t reduce again
-  if (ipRequests.get(ip) >= 1) {
+  // If IP already ended
+  if (data[key].iptime[ip] <= 0) {
     return {
       ...data[key],
-      info: "Already viewed from this IP"
+      info: "This IP has no remaining views",
+      iptime: 0,
+      times: data[key].times
     };
   }
 
-  // Reduce view count
+  // Reduce both
   data[key].times -= 1;
-  ipRequests.set(ip, ipRequests.get(ip) + 1);
+  data[key].iptime[ip] -= 1;
 
-  // If times ended
+  // If global ended after this request
   if (data[key].times <= 0) {
     return data.end;
   }
@@ -38,7 +39,8 @@ async function xen(query, ip) {
     name: data[key].name,
     link: data[key].link,
     price: data[key].price,
-    times: data[key].times
+    times: data[key].times,       // global remaining
+    iptime: data[key].iptime[ip]  // IP remaining
   };
 }
 
