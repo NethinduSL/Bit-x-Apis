@@ -4,8 +4,8 @@ const data = {
     name: "hi",
     link: "link1",
     price: "40RS",
-    times: 10,             // total global times
-    maxtimesperip: 5,      // per-IP max views
+    times: 10,             // global times (all IPs combined)
+    maxtimesperip: 5,      // how many times one IP can view
     iptime: {}             // per-IP counters
   },
   "99-@@": {
