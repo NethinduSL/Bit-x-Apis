@@ -1,46 +1,51 @@
-const data = require("dta.js");
+const data = require("./dta.js");
 
 async function xen(query, ip) {
   if (!query) throw new Error("Query is required");
   if (!ip) throw new Error("IP is required");
 
-  const key = "start";
+  // Check if query exists
+  if (!data[query]) {
+    throw new Error("No item found for this query");
+  }
 
-  // If global ended → return end
-  if (data[key].times <= 0) {
+  const item = data[query];
+
+  // If global ended
+  if (item.times <= 0) {
     return data.end;
   }
 
-  // Initialize IP times if not set
-  if (!data[key].iptime[ip]) {
-    data[key].iptime[ip] = data[key].maxtimesperip; // use config from dta.js
+  // Initialize IP if not set
+  if (!item.iptime[ip]) {
+    item.iptime[ip] = item.maxtimesperip;
   }
 
-  // If IP already ended
-  if (data[key].iptime[ip] <= 0) {
+  // If IP ended
+  if (item.iptime[ip] <= 0) {
     return {
-      ...data[key],
+      ...item,
       info: "This IP has no remaining views",
       iptime: 0,
-      times: data[key].times
+      times: item.times
     };
   }
 
-  // Reduce both
-  data[key].times -= 1;
-  data[key].iptime[ip] -= 1;
+  // Reduce counts
+  item.times -= 1;
+  item.iptime[ip] -= 1;
 
-  // If global ended after this request
-  if (data[key].times <= 0) {
+  // If global ended after this
+  if (item.times <= 0) {
     return data.end;
   }
 
   return {
-    name: data[key].name,
-    link: data[key].link,
-    price: data[key].price,
-    times: data[key].times,       // global remaining
-    iptime: data[key].iptime[ip]  // IP remaining
+    name: item.name,
+    link: item.link,
+    price: item.price,
+    times: item.times,
+    iptime: item.iptime[ip]
   };
 }
 
