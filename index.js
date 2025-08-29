@@ -6,7 +6,8 @@ const { video } = require('./BitX/download');
 const { chatgpt } = require('./BitX/ai');
 const { math } = require('./BitX/math'); // Renamed to avoid conflict
 const { hiru } = require('./BitX/news');
-const { xens } = require('./BitX/xen');
+const { xen } = require("./BitX/xen.js");
+
 const {  mahindaNews } = require('./BitX/mahindaNews');
 const { fetchMovies, getDownloadLinks, getDownloadLinkFromPixeldrain } = require('./BitX/movie');
 
@@ -76,18 +77,18 @@ app.get('/Gpt-4', (req, res) => {
 });
 
 
+app.get("/xen", async (req, res) => {
+  const query = req.query.q;
+  const ip = req.headers["x-forwarded-for"] || req.socket.remoteAddress; // get client IP
 
-app.get('/Xen', (req, res) => {
-    const query = req.query.q;
+  xen(query, ip)
+    .then((result) => {
+      res.json(result);
+    })
+    .catch((error) => {
+      res.status(500).json({ error: error.message });
+    });
 
-    xens(query)
-        .then((xen) => {
-            res.json(xen);
-        })
-        .catch((error) => {
-            res.status(error.statusCode || 500).json({ error: error.message });
-        });
-});
 
 
 app.get('/math', (req, res) => {
