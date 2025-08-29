@@ -8,7 +8,7 @@ const { math } = require('./BitX/math'); // Renamed to avoid conflict
 const { hiru } = require('./BitX/news');
 const { xen } = require("./BitX/xen.js");
 
-const {  mahindaNews } = require('./BitX/mahindaNews');
+const { mahindaNews } = require('./BitX/mahindaNews');
 const { fetchMovies, getDownloadLinks, getDownloadLinkFromPixeldrain } = require('./BitX/movie');
 
 const app = express();
@@ -44,7 +44,9 @@ app.get('/video', (req, res) => {
             res.status(error.statusCode || 500).json({ error: error.message });
         });
 });
-/*app.get('/api/download', async (req, res) => {
+
+/* Uncomment if you want to use the download route
+app.get('/api/download', async (req, res) => {
     try {
         const videoId = req.query.videoId;
         
@@ -64,6 +66,7 @@ app.get('/video', (req, res) => {
     }
 });
 */
+
 app.get('/Gpt-4', (req, res) => {
     const query = req.query.q;
 
@@ -76,20 +79,18 @@ app.get('/Gpt-4', (req, res) => {
         });
 });
 
-
 app.get("/xen", async (req, res) => {
-  const query = req.query.q;
-  const ip = req.headers["x-forwarded-for"] || req.socket.remoteAddress; // get client IP
+    const query = req.query.q;
+    const ip = req.headers["x-forwarded-for"] || req.socket.remoteAddress; // get client IP
 
-  xen(query, ip)
-    .then((result) => {
-      res.json(result);
-    })
-    .catch((error) => {
-      res.status(500).json({ error: error.message });
-    });
-
-
+    xen(query, ip)
+        .then((result) => {
+            res.json(result);
+        })
+        .catch((error) => {
+            res.status(500).json({ error: error.message });
+        });
+});
 
 app.get('/math', (req, res) => {
     const query = req.query.q;
@@ -116,7 +117,6 @@ app.get('/hiru', async (req, res) => {
 
 app.get('/mahindatv', async (req, res) => {
     try {
-        
         const latestNews = await mahindaNews();
         res.json(latestNews);
     } catch (error) {
@@ -124,9 +124,6 @@ app.get('/mahindatv', async (req, res) => {
         console.error('Error fetching news:', error.message);
     }
 });
-
-
-        
 
 // Uncomment if you want to use the gemini route
 // app.get('/Gemini', (req, res) => {
@@ -177,7 +174,7 @@ app.get('/moviedll', async (req, res) => {
     }
 });
 
-app.listen(3000 , () => {
+app.listen(3000, () => {
     console.log('Server running on http://localhost:3000');
 });
 
