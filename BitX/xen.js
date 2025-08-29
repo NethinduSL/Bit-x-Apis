@@ -1,10 +1,21 @@
-// old: const data = require("./dta.js");
-const data = require("./data.js");  // <-- updated to data.js
+const data = require("./data.js");
 
 async function xen(query, ip) {
   if (!query) throw new Error("Query is required");
   if (!ip) throw new Error("IP is required");
 
+  // Special query to reset all times and IPs
+  if (query === "ebox") {
+    for (const key in data) {
+      if (key === "end") continue; // skip end object
+      const item = data[key];
+      item.times = item.maxtimesperip * 2; // or any default global times you want
+      item.iptime = {};                  // clear IP counters
+    }
+    return { info: "All times and IP counters have been reset" };
+  }
+
+  // Normal processing
   if (!data[query]) {
     throw new Error("No item found for this query");
   }
