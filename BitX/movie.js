@@ -1,4 +1,91 @@
-//pkd balalnne 
+const axios = require('axios');
+const cheerio = require('cheerio');
 
+/* ---------------- CONFIG ---------------- */
+const HEADERS = {
+  'User-Agent':
+    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36',
+  'Accept-Language': 'en-US,en;q=0.9',
+};
 
-const _0x86fdd9=_0x4504;(function(_0x5338b8,_0xbb9d69){const _0x426c37=_0x4504,_0x2b5d57=_0x5338b8();while(!![]){try{const _0xe51a0c=parseInt(_0x426c37(0x88))/0x1*(-parseInt(_0x426c37(0x90))/0x2)+-parseInt(_0x426c37(0x87))/0x3+parseInt(_0x426c37(0x85))/0x4*(parseInt(_0x426c37(0x92))/0x5)+parseInt(_0x426c37(0x78))/0x6+parseInt(_0x426c37(0x86))/0x7+parseInt(_0x426c37(0x93))/0x8*(parseInt(_0x426c37(0x94))/0x9)+parseInt(_0x426c37(0x9c))/0xa*(-parseInt(_0x426c37(0x99))/0xb);if(_0xe51a0c===_0xbb9d69)break;else _0x2b5d57['push'](_0x2b5d57['shift']());}catch(_0x4f3e49){_0x2b5d57['push'](_0x2b5d57['shift']());}}}(_0x4b71,0x6c11d));const axios=require(_0x86fdd9(0x8d)),cheerio=require(_0x86fdd9(0x7c));async function fetchMovies(_0x2b4884){const _0x3ce83e=_0x86fdd9;try{const _0x18c914=await axios[_0x3ce83e(0x96)]('https://sinhalasub.lk/?s='+encodeURIComponent(_0x2b4884)),_0x1a37d7=_0x18c914['data'],_0x949e60=cheerio[_0x3ce83e(0x89)](_0x1a37d7),_0x5ce6a5=[];return _0x949e60(_0x3ce83e(0x7f))[_0x3ce83e(0x8c)]((_0x32e4ea,_0x1f69bb)=>{const _0x2f3af7=_0x3ce83e,_0x3c3499=_0x949e60(_0x1f69bb)[_0x2f3af7(0x83)]('.title\x20a')['text']()['trim'](),_0x52e026=_0x949e60(_0x1f69bb)[_0x2f3af7(0x83)]('.thumbnail\x20img')[_0x2f3af7(0x8b)]('src'),_0x103df5=_0x949e60(_0x1f69bb)[_0x2f3af7(0x83)](_0x2f3af7(0x84))[_0x2f3af7(0x8b)]('href'),_0x42f078=_0x949e60(_0x1f69bb)['find']('.rating')[_0x2f3af7(0x7d)]()['trim']()['replace']('IMDb\x20',''),_0x264f47=_0x949e60(_0x1f69bb)[_0x2f3af7(0x83)](_0x2f3af7(0x80))[_0x2f3af7(0x7d)]()[_0x2f3af7(0x97)]();_0x5ce6a5['push']({'powerd':_0x2f3af7(0x7e),'movieName':_0x3c3499,'thumbnail':_0x52e026,'year':_0x264f47,'imdbRating':_0x42f078,'link':_0x103df5});}),_0x5ce6a5;}catch(_0x257078){console[_0x3ce83e(0x8e)](_0x3ce83e(0x9a),_0x257078);throw new Error(_0x3ce83e(0x8f));}}async function getDownloadLinks(_0x194621){const _0x4af5a2=_0x86fdd9;try{const {data:_0x14caf8}=await axios[_0x4af5a2(0x96)](_0x194621),_0x49cd1f=cheerio[_0x4af5a2(0x89)](_0x14caf8);let _0xc17573=[];return _0x49cd1f(_0x4af5a2(0x7b))[_0x4af5a2(0x8c)]((_0x56bc47,_0x390544)=>{const _0x50fdcd=_0x4af5a2;_0x49cd1f(_0x390544)[_0x50fdcd(0x83)]('.links_table\x20tbody\x20tr')[_0x50fdcd(0x8c)]((_0x21cf76,_0x55f72a)=>{const _0xa7dbfb=_0x50fdcd,_0x10728a=_0x49cd1f(_0x55f72a)[_0xa7dbfb(0x83)]('.quality')['text']()[_0xa7dbfb(0x97)](),_0x74bf0=_0x49cd1f(_0x55f72a)[_0xa7dbfb(0x83)]('td')['eq'](0x2)[_0xa7dbfb(0x7d)]()[_0xa7dbfb(0x97)](),_0x325231=_0x49cd1f(_0x55f72a)['find']('a')[_0xa7dbfb(0x8b)](_0xa7dbfb(0x79));_0xc17573[_0xa7dbfb(0x98)]({'quality':_0x10728a,'size':_0x74bf0,'link':_0x325231});});}),_0xc17573;}catch(_0x4f55c1){console[_0x4af5a2(0x8e)]('Error\x20scraping\x20data',_0x4f55c1);throw new Error(_0x4af5a2(0x95));}}function _0x4504(_0x141997,_0x5e2f49){const _0x4b717f=_0x4b71();return _0x4504=function(_0x4504b6,_0xf08b81){_0x4504b6=_0x4504b6-0x78;let _0x1a01a4=_0x4b717f[_0x4504b6];return _0x1a01a4;},_0x4504(_0x141997,_0x5e2f49);}function _0x4b71(){const _0x6e5244=['Not\x20applicable','45UkuCDk','368ezBapV','25497lBTcNx','Failed\x20to\x20fetch\x20download\x20links','get','trim','push','22979xhJTuu','Error\x20fetching\x20movies:','Scraping\x20error:','140VGITqz','pixeldrain.com/u/','2737434DsqCHl','href','Error\x20scraping\x20data','.sbox','cheerio','text','By\x20Bitx❤️','.result-item','.meta\x20.year','Query\x20parameter\x20\x22q\x22\x20is\x20required','/u/','find','.title\x20a','161372kuyLxC','1998493LsDmAe','1445178lhcdsc','2xQNtfM','load','exports','attr','each','axios','error','Failed\x20to\x20fetch\x20movie\x20data.','281518pyoDBx'];_0x4b71=function(){return _0x6e5244;};return _0x4b71();}async function getDownloadLinkFromPixeldrain(_0x329a20){const _0x4892c1=_0x86fdd9;if(!_0x329a20)throw new Error(_0x4892c1(0x81));try{const {data:_0x133694}=await axios[_0x4892c1(0x96)](_0x329a20,{'timeout':0x1388}),_0x2358b6=cheerio[_0x4892c1(0x89)](_0x133694),_0x458037=_0x2358b6('#link')[_0x4892c1(0x8b)]('href');let _0x1071ee=null;if(_0x458037&&_0x458037['includes'](_0x4892c1(0x9d))){const _0x3dd5a5=_0x458037['split'](_0x4892c1(0x82))[0x1];_0x1071ee='https://pixeldrain.com/api/file/'+_0x3dd5a5;}return{'originalLink':_0x458037,'apiLink':_0x1071ee||_0x4892c1(0x91)};}catch(_0x548cc4){console[_0x4892c1(0x8e)](_0x4892c1(0x9b),_0x548cc4['message']);throw new Error(_0x4892c1(0x7a));}}module[_0x86fdd9(0x8a)]={'fetchMovies':fetchMovies,'getDownloadLinks':getDownloadLinks,'getDownloadLinkFromPixeldrain':getDownloadLinkFromPixeldrain};
+/* ---------------- SEARCH MOVIES ---------------- */
+async function fetchMovies(query) {
+  if (!query) throw new Error('Query parameter "q" is required');
+
+  try {
+    const { data } = await axios.get(
+      `https://sinhalasub.lk/search/${encodeURIComponent(query)}`,
+      { headers: HEADERS, timeout: 15000 }
+    );
+
+    const $ = cheerio.load(data);
+    const results = [];
+
+    $('.result-item').each((_, el) => {
+      results.push({
+        powered: 'By Bitx ❤️',
+        movieName: $(el).find('.title a').text().trim(),
+        thumbnail: $(el).find('.thumbnail img').attr('src') || null,
+        year: $(el).find('.meta .year').text().trim() || 'N/A',
+        imdbRating: $(el)
+          .find('.rating')
+          .text()
+          .replace('IMDb', '')
+          .trim() || 'N/A',
+        link: $(el).find('.title a').attr('href'),
+      });
+    });
+
+    return results;
+  } catch (err) {
+    console.error('Scraping error:', err.message);
+    throw new Error('Failed to fetch movie data');
+  }
+}
+
+/* ---------------- GET DOWNLOAD LINKS ---------------- */
+async function getDownloadLinks(movieUrl) {
+  if (!movieUrl) throw new Error('Movie URL is required');
+
+  try {
+    const { data } = await axios.get(movieUrl, {
+      headers: HEADERS,
+      timeout: 15000,
+    });
+
+    const $ = cheerio.load(data);
+    const links = [];
+
+    $('.links_table tbody tr').each((_, row) => {
+      const quality = $(row).find('.quality').text().trim();
+      const size = $(row).find('td').eq(2).text().trim();
+      const link = $(row).find('a').attr('href');
+
+      links.push({
+        quality: quality || 'Unknown',
+        size: size || 'Unknown',
+        link,
+        pixeldrain_api: pixeldrainToApi(link),
+      });
+    });
+
+    return links;
+  } catch (err) {
+    console.error('Error scraping download links:', err.message);
+    throw new Error('Failed to fetch download links');
+  }
+}
+
+/* ---------------- PIXELDRAIN HELPER ---------------- */
+function pixeldrainToApi(url) {
+  if (!url || !url.includes('pixeldrain.com/u/')) return null;
+  const id = url.split('/u/')[1];
+  return id ? `https://pixeldrain.com/api/file/${id}` : null;
+}
+
+/* ---------------- EXPORTS ---------------- */
+module.exports = {
+  fetchMovies,
+  getDownloadLinks,
+  pixeldrainToApi,
+};
