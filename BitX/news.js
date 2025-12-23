@@ -1,23 +1,29 @@
-const axios = require('axios');
+const puppeteer = require('puppeteer');
 const cheerio = require('cheerio');
 
 async function hiru() {
-  const baseURL = 'https://www.hirunews.lk/';
+  const browser = await puppeteer.launch({
+    headless: "new",
+    args: [
+      '--no-sandbox',
+      '--disable-setuid-sandbox',
+    ],
+  });
 
   try {
-    const response = await axios.get(baseURL, {
-      headers: {
-        'User-Agent':
-          'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36',
-        'Accept':
-          'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-        'Accept-Language': 'en-US,en;q=0.9',
-        'Referer': 'https://www.google.com/',
-      },
-      timeout: 10000,
+    const page = await browser.newPage();
+
+    await page.setUserAgent(
+      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36'
+    );
+
+    await page.goto('https://www.hirunews.lk/', {
+      waitUntil: 'networkidle2',
+      timeout: 0,
     });
 
-    const $ = cheerio.load(response.data);
+    const html = await page.content();
+    const $ = cheerio.load(html);
 
     const latestNewsLink = $('.today-video-tittle')
       .next('.middle-article')
@@ -29,24 +35,18 @@ async function hiru() {
       throw new Error('No latest news link found');
     }
 
-    const newsURL = latestNewsLink;
-
-    const newsResponse = await axios.get(newsURL, {
-      headers: {
-        'User-Agent':
-          'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36',
-      },
+    await page.goto(latestNewsLink, {
+      waitUntil: 'networkidle2',
+      timeout: 0,
     });
 
-    const newsPage = cheerio.load(newsResponse.data);
+    const newsHTML = await page.content();
+    const newsPage = cheerio.load(newsHTML);
 
     const title = newsPage('h1.main-tittle').text().trim();
     const image = newsPage('img.lazyload').attr('data-src');
 
-    const textContainer = newsPage('#article-phara2');
-    textContainer.find('iframe').remove();
-
-    const text = textContainer
+    const text = newsPage('#article-phara2')
       .text()
       .replace(/\s+/g, ' ')
       .trim();
@@ -55,12 +55,11 @@ async function hiru() {
       Power: 'by Bitx ❤️',
       title,
       image,
-      newsURL,
+      newsURL: latestNewsLink,
       text,
     };
-  } catch (error) {
-    console.error('Error fetching latest news:', error.message);
-    throw error;
+  } finally {
+    await browser.close();
   }
 }
 
