@@ -68,7 +68,7 @@ app.get('/api/download', async (req, res) => {
         });
     }
 });
-*/
+
 
 app.get('/Gpt-4', (req, res) => {
     const query = req.query.q;
@@ -81,7 +81,7 @@ app.get('/Gpt-4', (req, res) => {
             res.status(error.statusCode || 500).json({ error: error.message });
         });
 });
-
+*/
 app.get("/xen", async (req, res) => {
     const query = req.query.q;
     const ip = req.headers["x-forwarded-for"] || req.socket.remoteAddress; // get client IP
