@@ -1,34 +1,24 @@
-const Groq = require('groq-sdk');
-
-const groq = new Groq({
-  apiKey: process.env.GROQ_API_KEY
-});
+// BitX/ai.js
+const puter = require('puter-ai'); // Node.js version of puter.ai
 
 async function chatgpt(query) {
-  if (!query) {
-    throw new Error('Query is required');
-  }
+  if (!query) throw new Error('Query is required');
 
   try {
-    const completion = await groq.chat.completions.create({
-      model: 'llama3-8b-8192',
-      messages: [
-        { role: 'system', content: 'You are a helpful AI assistant.' },
-        { role: 'user', content: query }
-      ]
-    });
+    // Chat with Grok 4.1 Fast
+    const response = await puter.ai.chat(query, { model: 'x-ai/grok-4.1-fast' });
 
     return {
       status: true,
       Created_by: 'Bitx',
       title: 'ChatGPT',
-      poweredBy: 'Groq ⚡ (Free)',
-      response: completion.choices[0].message.content
+      poweredBy: 'Grok 4.1 Fast',
+      response: response.message.content
     };
 
   } catch (error) {
-    console.error('Groq AI Error:', error.message);
-    throw new Error('Failed to fetch response from AI');
+    console.error('Puter AI Error:', error.message);
+    throw new Error('Failed to fetch AI response: ' + error.message);
   }
 }
 
