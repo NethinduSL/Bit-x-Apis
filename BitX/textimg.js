@@ -6,7 +6,7 @@ async function textImage(query, fontName = 'sans', fontSize = 200) {
     if (!query) throw new Error('Query parameter "q" is required');
 
     // Load font
-    const fontPath = path.join(__dirname, 'Font', `${fontName}.ttf`);
+    const fontPath = path.join(__dirname,'Font', `${fontName}.ttf`);
     if (!fs.existsSync(fontPath)) throw new Error(`Font "${fontName}" not found`);
     registerFont(fontPath, { family: fontName });
 
