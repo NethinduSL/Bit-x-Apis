@@ -1,15 +1,8 @@
-import fs from 'fs';
-import path from 'path';
-import { createCanvas, registerFont, CanvasRenderingContext2D } from 'canvas';
+const fs = require('fs');
+const path = require('path');
+const { createCanvas, registerFont } = require('canvas');
 
-export interface TextImageResult {
-    status: boolean;
-    text: string;
-    font: string;
-    image: string; // base64 PNG
-}
-
-export async function textImage(query: string, fontName = 'sans'): Promise<TextImageResult> {
+async function textImage(query, fontName = 'sans') {
     if (!query) throw new Error('Query parameter "q" is required');
 
     const fontPath = path.join(__dirname, '..', 'fonts', `${fontName}.ttf`);
@@ -20,19 +13,18 @@ export async function textImage(query: string, fontName = 'sans'): Promise<TextI
     const width = 800;
     const height = 200;
     const canvas = createCanvas(width, height);
-    const ctx: CanvasRenderingContext2D = canvas.getContext('2d');
+    const ctx = canvas.getContext('2d');
 
     // Transparent background
     ctx.clearRect(0, 0, width, height);
 
-    // Text style
+    // Draw text
     ctx.fillStyle = '#000';
     ctx.font = `bold 80px "${fontName}"`;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillText(query, width / 2, height / 2);
 
-    // Convert to base64
     const buffer = canvas.toBuffer('image/png');
     const base64Image = `data:image/png;base64,${buffer.toString('base64')}`;
 
@@ -43,3 +35,5 @@ export async function textImage(query: string, fontName = 'sans'): Promise<TextI
         image: base64Image
     };
 }
+
+module.exports = { textImage };
