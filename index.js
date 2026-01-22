@@ -10,7 +10,7 @@ const { math } = require('./BitX/math');
 const { hiru } = require('./BitX/news');
 const { xen } = require("./BitX/xen.js");
 const { text } = require('./BitX/text');
-
+const { textImage } = require('./BitX/textimg');
 
 const { mahindaNews } = require('./BitX/mahindaNews');
 const { fetchMovies, getDownloadLinks, getDownloadLinkFromPixeldrain } = require('./BitX/movie');
@@ -19,6 +19,7 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
+app.use('/public', express.static(path.join(__dirname, 'public')));
 
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'home.html'));
@@ -30,104 +31,40 @@ app.get('/details', (req, res) => {
 
 app.get('/info', (req, res) => {
     runInfoScript()
-        .then((infoData) => {
-            res.json(infoData);
-        })
-        .catch((error) => {
-            res.status(500).json({ error: 'Failed to fetch info data', message: error.message });
-        });
+        .then(infoData => res.json(infoData))
+        .catch(error => res.status(500).json({ error: 'Failed to fetch info data', message: error.message }));
 });
 
 app.get('/video', (req, res) => {
     const query = req.query.q;
-
     video(query)
-        .then((videoData) => {
-            res.json(videoData);
-        })
-        .catch((error) => {
-            res.status(error.statusCode || 500).json({ error: error.message });
-        });
+        .then(videoData => res.json(videoData))
+        .catch(error => res.status(error.statusCode || 500).json({ error: error.message }));
 });
 
 app.get('/text', (req, res) => {
     const query = req.query.q;
-
-    if (!query) {
-        return res.status(400).json({
-            status: false,
-            error: 'Query parameter "q" is required'
-        });
-    }
+    if (!query) return res.status(400).json({ status: false, error: 'Query parameter "q" is required' });
 
     text(query)
-        .then((data) => {
-            res.json(data);
-        })
-        .catch((error) => {
-            res.status(500).json({
-                status: false,
-                error: error.message
-            });
-        });
+        .then(data => res.json(data))
+        .catch(error => res.status(500).json({ status: false, error: error.message }));
 });
-
-/*
-app.get('/api/download', async (req, res) => {
-    try {
-        const videoId = req.query.videoId;
-
-        if (!videoId) {
-            return res.status(400).json({ error: 'Video ID is required' });
-        }
-
-        await downloadVideo(videoId, res);
-    } catch (error) {
-        console.error('Download error:', error);
-        res.status(error.statusCode || 500).json({
-            error: true,
-            message: error.message,
-            details: error.details
-        });
-    }
-});
-
-app.get('/Gpt-4', (req, res) => {
-    const query = req.query.q;
-
-    chatgpt(query)
-        .then((chatgptData) => {
-            res.json(chatgptData);
-        })
-        .catch((error) => {
-            res.status(error.statusCode || 500).json({ error: error.message });
-        });
-});
-*/
 
 app.get("/xen", async (req, res) => {
     const query = req.query.q;
     const ip = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
 
     xen(query, ip)
-        .then((result) => {
-            res.json(result);
-        })
-        .catch((error) => {
-            res.status(500).json({ error: error.message });
-        });
+        .then(result => res.json(result))
+        .catch(error => res.status(500).json({ error: error.message }));
 });
 
 app.get('/math', (req, res) => {
     const query = req.query.q;
-
     math(query)
-        .then((mathData) => {
-            res.json(mathData);
-        })
-        .catch((error) => {
-            res.status(error.statusCode || 500).json({ error: error.message });
-        });
+        .then(mathData => res.json(mathData))
+        .catch(error => res.status(error.statusCode || 500).json({ error: error.message }));
 });
 
 app.get('/hiru', async (req, res) => {
@@ -151,10 +88,7 @@ app.get('/mahindatv', async (req, res) => {
 
 app.get("/movie", async (req, res) => {
     const query = req.query.query;
-
-    if (!query) {
-        return res.status(400).json({ error: "Query parameter is required." });
-    }
+    if (!query) return res.status(400).json({ error: "Query parameter is required." });
 
     try {
         const movies = await fetchMovies(query);
@@ -166,7 +100,6 @@ app.get("/movie", async (req, res) => {
 
 app.get('/moviedl', async (req, res) => {
     const link = req.query.q;
-
     try {
         const downloadLinks = await getDownloadLinks(link);
         res.json({ powered: 'By Bitx❤️', downloadLinks });
@@ -177,12 +110,29 @@ app.get('/moviedl', async (req, res) => {
 
 app.get('/moviedll', async (req, res) => {
     const link = req.query.q;
-
     try {
         const { originalLink, apiLink } = await getDownloadLinkFromPixeldrain(link);
         res.json({ powered: 'By Bitx❤️', originalLink, apiLink });
     } catch (error) {
         res.status(500).send('Error scraping data');
+    }
+});
+
+// New /textimg route
+app.get('/textimg', async (req, res) => {
+    const query = req.query.q;
+    const font = req.query.font || 'sans';
+
+    try {
+        const result = await textImage(query, font);
+        res.json({
+            status: true,
+            text: result.text,
+            font: result.font,
+            image: `${req.protocol}://${req.get('host')}${result.image}`
+        });
+    } catch (err) {
+        res.status(500).json({ status: false, error: err.message });
     }
 });
 
