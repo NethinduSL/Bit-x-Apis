@@ -133,7 +133,25 @@ app.get('/textimg', async (req, res) => {
     }
 });
 
+app.get('/fonts', (req, res) => {
+    const fontDir = path.join(__dirname, 'BitX/Font');
 
+    fs.readdir(fontDir, (err, files) => {
+        if (err) {
+            return res.status(500).json({ status: false, error: err.message });
+        }
+
+        // Filter .ttf files and remove extension
+        const fonts = files
+            .filter(file => path.extname(file).toLowerCase() === '.ttf')
+            .map(file => path.basename(file, '.ttf'));
+
+        res.json({
+            status: true,
+            fonts
+        });
+    });
+});
 app.listen(3000, () => {
     console.log('Server running on http://localhost:3000');
 });
