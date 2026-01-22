@@ -15,33 +15,24 @@ async function textImage(query, fontName = 'sans') {
     const canvas = createCanvas(width, height);
     const ctx = canvas.getContext('2d');
 
-    ctx.fillStyle = '#fff';
-    ctx.fillRect(0, 0, width, height);
+    // Transparent background (do not fill)
+    ctx.clearRect(0, 0, width, height);
 
-    ctx.fillStyle = '#000';
+    ctx.fillStyle = '#000'; // text color black
     ctx.font = `bold 80px "${fontName}"`;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillText(query, width / 2, height / 2);
 
-    const timestamp = Date.now();
-    const filename = `${timestamp}.png`;
-    const filePath = path.join(__dirname, '..', 'public/images', filename);
-    const out = fs.createWriteStream(filePath);
-    const stream = canvas.createPNGStream();
+    const buffer = canvas.toBuffer('image/png');
+    const base64Image = `data:image/png;base64,${buffer.toString('base64')}`;
 
-    return new Promise((resolve, reject) => {
-        stream.pipe(out);
-        out.on('finish', () => {
-            resolve({
-                status: true,
-                text: query,
-                font: fontName,
-                image: `/public/images/${filename}`
-            });
-        });
-        out.on('error', reject);
-    });
+    return {
+        status: true,
+        text: query,
+        font: fontName,
+        image: base64Image
+    };
 }
 
 module.exports = { textImage };
