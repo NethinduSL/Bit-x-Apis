@@ -1,10 +1,9 @@
-// BitX/ai.js
+// BitX/text.js
 // Sinhala Unicode → Wijesekara English Key Converter
 
 function sinhalaToWijesekara(text) {
   if (!text) return '';
 
-  // --- Base consonants (from image) ---
   const consonants = {
     'ක': 'l',
     'ඛ': 'L',
@@ -26,11 +25,9 @@ function sinhalaToWijesekara(text) {
     'ව': 'j',
     'ස': 'i',
     'හ': 'y',
-    'ළ': 'f',
-    'ග': '.'
+    'ළ': 'f'
   };
 
-  // --- Vowel signs ---
   const vowels = {
     'ා': 'a',
     'ැ': 'A',
@@ -48,7 +45,6 @@ function sinhalaToWijesekara(text) {
     '්': '' // hal kirima
   };
 
-  // --- Independent vowels ---
   const independentVowels = {
     'අ': 'a',
     'ආ': 'A',
@@ -75,7 +71,6 @@ function sinhalaToWijesekara(text) {
     } else if (independentVowels[char]) {
       result += independentVowels[char];
     } else {
-      // space or unknown char
       result += buffer + char;
       buffer = '';
     }
@@ -104,4 +99,4 @@ async function text(query) {
   }
 }
 
-module.exports = { chatgpt };
+module.exports = { text };
