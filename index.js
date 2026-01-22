@@ -8,7 +8,7 @@ const { video } = require('./BitX/download');
 const { chatgpt } = require('./BitX/ai');
 const { math } = require('./BitX/math');
 const { hiru } = require('./BitX/news');
-const { xen } = require("./BitX/xen.js");
+const { xen } = require('./BitX/xen.js');
 const { text } = require('./BitX/text');
 const { textImage } = require('./BitX/textimg');
 
@@ -19,7 +19,6 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
-app.use('/public', express.static(path.join(__dirname, 'public')));
 
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'home.html'));
@@ -118,19 +117,16 @@ app.get('/moviedll', async (req, res) => {
     }
 });
 
+// -------------------------
 // New /textimg route
+// -------------------------
 app.get('/textimg', async (req, res) => {
     const query = req.query.q;
     const font = req.query.font || 'sans';
 
     try {
         const result = await textImage(query, font);
-        res.json({
-            status: true,
-            text: result.text,
-            font: result.font,
-            image: `${req.protocol}://${req.get('host')}${result.image}`
-        });
+        res.json(result);
     } catch (err) {
         res.status(500).json({ status: false, error: err.message });
     }
