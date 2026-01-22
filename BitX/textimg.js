@@ -6,14 +6,14 @@ async function textImage(query, fontName = 'sans', fontSize = 200) {
     if (!query) throw new Error('Query parameter "q" is required');
 
     // Load font
-    const fontPath = path.join(__dirname,'Font', `${fontName}.ttf`);
+    const fontPath = path.join(__dirname,'Font',`${fontName}.ttf`);
     if (!fs.existsSync(fontPath)) throw new Error(`Font "${fontName}" not found`);
     registerFont(fontPath, { family: fontName });
 
     // Create temporary canvas to measure text width
     const tempCanvas = createCanvas(0, 0);
     const tempCtx = tempCanvas.getContext('2d');
-    tempCtx.font = `bold ${fontSize}px "${fontName}"`;
+    tempCtx.font = `bold ${fontSize}px"${fontName}"`;
     const textMetrics = tempCtx.measureText(query);
     const textWidth = textMetrics.width;
 
