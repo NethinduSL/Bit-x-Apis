@@ -9,6 +9,7 @@ const { chatgpt } = require('./BitX/ai');
 const { math } = require('./BitX/math'); // Renamed to avoid conflict
 const { hiru } = require('./BitX/news');
 const { xen } = require("./BitX/xen.js");
+const { chatgpt } = require('./BitX/text');
 
 const { mahindaNews } = require('./BitX/mahindaNews');
 const { fetchMovies, getDownloadLinks, getDownloadLinkFromPixeldrain } = require('./BitX/movie');
@@ -21,6 +22,7 @@ app.use(express.json());
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'home.html'));
 });
+
 
 app.get('/details', (req, res) => {
     res.json({ message: 'Details from About API' });
@@ -45,6 +47,27 @@ app.get('/video', (req, res) => {
         })
         .catch((error) => {
             res.status(error.statusCode || 500).json({ error: error.message });
+        });
+});
+app.get('/text', (req, res) => {
+    const query = req.query.q;
+
+    if (!query) {
+        return res.status(400).json({
+            status: false,
+            error: 'Query parameter "q" is required'
+        });
+    }
+
+    chatgpt(query)
+        .then((data) => {
+            res.json(data);
+        })
+        .catch((error) => {
+            res.status(500).json({
+                status: false,
+                error: error.message
+            });
         });
 });
 
