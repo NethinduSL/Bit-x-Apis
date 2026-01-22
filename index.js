@@ -9,7 +9,7 @@ const { chatgpt } = require('./BitX/ai');
 const { math } = require('./BitX/math'); // Renamed to avoid conflict
 const { hiru } = require('./BitX/news');
 const { xen } = require("./BitX/xen.js");
-const { chatgpt } = require('./BitX/text');
+const { text } = require('./BitX/text');
 
 const { mahindaNews } = require('./BitX/mahindaNews');
 const { fetchMovies, getDownloadLinks, getDownloadLinkFromPixeldrain } = require('./BitX/movie');
@@ -59,7 +59,7 @@ app.get('/text', (req, res) => {
         });
     }
 
-    chatgpt(query)
+    text(query)
         .then((data) => {
             res.json(data);
         })
