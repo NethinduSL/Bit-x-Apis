@@ -1,5 +1,5 @@
 // BitX/ai.js
-const puter = require('puter-ai'); // Node.js version of puter.ai
+/*const puter = require('puter-ai');
 
 async function chatgpt(query) {
   if (!query) throw new Error('Query is required');
@@ -22,4 +22,4 @@ async function chatgpt(query) {
   }
 }
 
-module.exports = { chatgpt };
+module.exports = { chatgpt };*/
