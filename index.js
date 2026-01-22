@@ -11,6 +11,7 @@ const { hiru } = require('./BitX/news');
 const { xen } = require("./BitX/xen.js");
 const { text } = require('./BitX/text');
 
+
 const { mahindaNews } = require('./BitX/mahindaNews');
 const { fetchMovies, getDownloadLinks, getDownloadLinkFromPixeldrain } = require('./BitX/movie');
 
