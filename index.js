@@ -123,14 +123,16 @@ app.get('/moviedll', async (req, res) => {
 app.get('/textimg', async (req, res) => {
     const query = req.query.q;
     const font = req.query.font || 'sans';
+    const size = parseInt(req.query.size) || 200; // default 200px
 
     try {
-        const result = await textImage(query, font);
+        const result = await textImage(query, font, size);
         res.json(result);
     } catch (err) {
         res.status(500).json({ status: false, error: err.message });
     }
 });
+
 
 app.listen(3000, () => {
     console.log('Server running on http://localhost:3000');
