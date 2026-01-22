@@ -5,29 +5,23 @@ const cors = require('cors');
 
 const { runInfoScript } = require('./BitX/info');
 const { video } = require('./BitX/download');
-
-// ✅ ALIAS chatgpt
-const { chatgpt: aiChatgpt } = require('./BitX/ai');
-
+const { chatgpt } = require('./BitX/ai');
 const { math } = require('./BitX/math');
 const { hiru } = require('./BitX/news');
 const { xen } = require("./BitX/xen.js");
-
-// ✅ ALIAS text converter (very important)
-const { chatgpt: text } = require('./BitX/text');
+const { text } = require('./BitX/text');
 
 const { mahindaNews } = require('./BitX/mahindaNews');
 const { fetchMovies, getDownloadLinks, getDownloadLinkFromPixeldrain } = require('./BitX/movie');
 
 const app = express();
 
-app.use(cors()); // <-- add this
+app.use(cors());
 app.use(express.json());
 
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'home.html'));
 });
-
 
 app.get('/details', (req, res) => {
     res.json({ message: 'Details from About API' });
@@ -54,6 +48,7 @@ app.get('/video', (req, res) => {
             res.status(error.statusCode || 500).json({ error: error.message });
         });
 });
+
 app.get('/text', (req, res) => {
     const query = req.query.q;
 
@@ -76,27 +71,25 @@ app.get('/text', (req, res) => {
         });
 });
 
-/* Uncomment if you want to use the download route
+/*
 app.get('/api/download', async (req, res) => {
     try {
         const videoId = req.query.videoId;
-        
+
         if (!videoId) {
             return res.status(400).json({ error: 'Video ID is required' });
         }
-        
+
         await downloadVideo(videoId, res);
-        // Note: downloadVideo function handles the response
     } catch (error) {
         console.error('Download error:', error);
-        res.status(error.statusCode || 500).json({ 
-            error: true, 
+        res.status(error.statusCode || 500).json({
+            error: true,
             message: error.message,
-            details: error.details 
+            details: error.details
         });
     }
 });
-
 
 app.get('/Gpt-4', (req, res) => {
     const query = req.query.q;
@@ -110,9 +103,10 @@ app.get('/Gpt-4', (req, res) => {
         });
 });
 */
+
 app.get("/xen", async (req, res) => {
     const query = req.query.q;
-    const ip = req.headers["x-forwarded-for"] || req.socket.remoteAddress; // get client IP
+    const ip = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
 
     xen(query, ip)
         .then((result) => {
@@ -142,7 +136,6 @@ app.get('/hiru', async (req, res) => {
         res.json(latestNews);
     } catch (error) {
         res.status(500).json({ error: error.message });
-        console.error('Error fetching news:', error.message);
     }
 });
 
@@ -152,24 +145,11 @@ app.get('/mahindatv', async (req, res) => {
         res.json(latestNews);
     } catch (error) {
         res.status(500).json({ error: error.message });
-        console.error('Error fetching news:', error.message);
     }
 });
 
-// Uncomment if you want to use the gemini route
-// app.get('/Gemini', (req, res) => {
-//     const query = req.query.q;
-//     gemini(query)
-//         .then((gemini) => {
-//             res.json(gemini);
-//         })
-//         .catch((error) => {
-//             res.status(error.statusCode || 500).json({ error: error.message });
-//         });
-// });
-
 app.get("/movie", async (req, res) => {
-    const query = req.query.query; // Changed to match the expected parameter
+    const query = req.query.query;
 
     if (!query) {
         return res.status(400).json({ error: "Query parameter is required." });
