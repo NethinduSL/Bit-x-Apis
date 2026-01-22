@@ -5,11 +5,16 @@ const cors = require('cors');
 
 const { runInfoScript } = require('./BitX/info');
 const { video } = require('./BitX/download');
-const { chatgpt } = require('./BitX/ai');
-const { math } = require('./BitX/math'); // Renamed to avoid conflict
+
+// ✅ ALIAS chatgpt
+const { chatgpt: aiChatgpt } = require('./BitX/ai');
+
+const { math } = require('./BitX/math');
 const { hiru } = require('./BitX/news');
 const { xen } = require("./BitX/xen.js");
-const { text } = require('./BitX/text');
+
+// ✅ ALIAS text converter (very important)
+const { chatgpt: text } = require('./BitX/text');
 
 const { mahindaNews } = require('./BitX/mahindaNews');
 const { fetchMovies, getDownloadLinks, getDownloadLinkFromPixeldrain } = require('./BitX/movie');
