@@ -123,15 +123,18 @@ app.get('/moviedll', async (req, res) => {
 app.get('/textimg', async (req, res) => {
     const query = req.query.q;
     const font = req.query.font || 'sans';
-    const size = parseInt(req.query.size) || 200; // default 200px
+    const size = parseInt(req.query.size) || 200;
+    const align = req.query.align || 'center';
+    const color = req.query.color || '#000000';
 
     try {
-        const result = await textImage(query, font, size);
+        const result = await textImage(query, font, size, align, color);
         res.json(result);
     } catch (err) {
         res.status(500).json({ status: false, error: err.message });
     }
 });
+
 
 app.get('/fonts', (req, res) => {
     const fontDir = path.join(__dirname, 'BitX/Font');
