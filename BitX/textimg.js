@@ -5,7 +5,7 @@ const { createCanvas, registerFont } = require('canvas');
 async function textImage(query, fontName = 'sans') {
     if (!query) throw new Error('Query parameter "q" is required');
 
-    const fontPath = path.join(__dirname,'fonts', `${fontName}.ttf`);
+    const fontPath = path.join(__dirname,'Font', `${fontName}.ttf`);
     if (!fs.existsSync(fontPath)) throw new Error(`Font "${fontName}" not found`);
 
     registerFont(fontPath, { family: fontName });
