@@ -5,57 +5,21 @@ function sinhalaToWijesekara(text) {
   if (!text) return '';
 
   const consonants = {
-    'ක': 'l',
-    'ඛ': 'L',
-    'ග': '.',
-    'ඝ': '>',
-    'ච': 'c',
-    'ජ': 'j',
-    'ට': 'g',
-    'ඩ': 'v',
-    'ත': 'w',
-    'ද': 'o',
-    'න': 'k',
-    'ප': 'm',
-    'බ': 'n',
-    'ම': 'u',
-    'ය': 'h',
-    'ර': 'r',
-    'ල': 's',
-    'ව': 'j',
-    'ස': 'i',
-    'හ': 'y',
-    'ළ': 'f'
+    'ක': 'l', 'ඛ': 'L', 'ග': '.', 'ඝ': '>', 'ච': 'c', 'ජ': 'j',
+    'ට': 'g', 'ඩ': 'v', 'ත': 'w', 'ද': 'o', 'න': 'k', 'ප': 'm',
+    'බ': 'n', 'ම': 'u', 'ය': 'h', 'ර': 'r', 'ල': 's', 'ව': 'j',
+    'ස': 'i', 'හ': 'y', 'ළ': 'f'
   };
 
   const vowels = {
-    'ා': 'a',
-    'ැ': 'A',
-    'ෑ': 'AA',
-    'ි': 's',
-    'ී': 'S',
-    'ු': 'd',
-    'ූ': 'D',
-    'ෙ': 'f',
-    'ේ': 'fa',
-    'ො': 'df',
-    'ෝ': 'dfa',
-    'ෛ': 'ff',
-    'ං': 'x',
-    '්': '' // hal kirima
+    'ා': 'a', 'ැ': 'A', 'ෑ': 'AA', 'ි': 's', 'ී': 'S',
+    'ු': 'd', 'ූ': 'D', 'ෙ': 'f', 'ේ': 'fa', 'ො': 'df',
+    'ෝ': 'dfa', 'ෛ': 'ff', 'ං': 'x', '්': ''
   };
 
   const independentVowels = {
-    'අ': 'a',
-    'ආ': 'A',
-    'ඉ': 's',
-    'ඊ': 'S',
-    'උ': 'd',
-    'ඌ': 'D',
-    'එ': 'f',
-    'ඒ': 'fa',
-    'ඔ': 'df',
-    'ඕ': 'dfa'
+    'අ': 'a', 'ආ': 'A', 'ඉ': 's', 'ඊ': 'S', 'උ': 'd',
+    'ඌ': 'D', 'එ': 'f', 'ඒ': 'fa', 'ඔ': 'df', 'ඕ': 'dfa'
   };
 
   let result = '';
@@ -79,7 +43,6 @@ function sinhalaToWijesekara(text) {
   return result + buffer;
 }
 
-// API wrapper
 async function text(query) {
   if (!query) throw new Error('Query is required');
 
@@ -99,4 +62,5 @@ async function text(query) {
   }
 }
 
+// FIX: export the correct function
 module.exports = { text };
