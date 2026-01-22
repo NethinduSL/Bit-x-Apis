@@ -85,7 +85,7 @@ function sinhalaToWijesekara(text) {
 }
 
 // API wrapper
-async function chatgpt(query) {
+async function text(query) {
   if (!query) throw new Error('Query is required');
 
   try {
