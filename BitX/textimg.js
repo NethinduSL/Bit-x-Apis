@@ -5,7 +5,7 @@ const { createCanvas, registerFont } = require('canvas');
 async function textImage(query, fontName = 'sans') {
     if (!query) throw new Error('Query parameter "q" is required');
 
-    const fontPath = path.join(__dirname, '..', 'fonts', `${fontName}.ttf`);
+    const fontPath = path.join(__dirname, 'fonts', `${fontName}.ttf`);
     if (!fs.existsSync(fontPath)) throw new Error(`Font "${fontName}" not found`);
 
     registerFont(fontPath, { family: fontName });
@@ -15,10 +15,8 @@ async function textImage(query, fontName = 'sans') {
     const canvas = createCanvas(width, height);
     const ctx = canvas.getContext('2d');
 
-    // Transparent background
     ctx.clearRect(0, 0, width, height);
 
-    // Draw text
     ctx.fillStyle = '#000';
     ctx.font = `bold 80px "${fontName}"`;
     ctx.textAlign = 'center';
