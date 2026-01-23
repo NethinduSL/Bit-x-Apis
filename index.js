@@ -41,14 +41,6 @@ app.get('/video', (req, res) => {
         .catch(error => res.status(error.statusCode || 500).json({ error: error.message }));
 });
 
-app.get('/text', (req, res) => {
-    const query = req.query.q;
-    if (!query) return res.status(400).json({ status: false, error: 'Query parameter "q" is required' });
-
-    text(query)
-        .then(data => res.json(data))
-        .catch(error => res.status(500).json({ status: false, error: error.message }));
-});
 
 app.get("/xen", async (req, res) => {
     const query = req.query.q;
@@ -146,6 +138,18 @@ app.get('/textimg', async (req, res) => {
     }
 });
 
+app.get('/text', (req, res) => {
+    const query = req.query.q;
+    const type = parseInt(req.query.type) || 1; // Default to 1 if not provided
+
+    if (!query) {
+        return res.status(400).json({ status: false, error: 'Query parameter "q" is required' });
+    }
+
+    text(query, type)
+        .then(data => res.json(data))
+        .catch(error => res.status(500).json({ status: false, error: error.message }));
+});
 
 
 app.get('/fonts', (req, res) => {
