@@ -10,17 +10,17 @@ const consonants = {
   'හ':'y','ෆ':'F'
 };
 
-// pre-vowels (appear before consonant)
+// Pre-vowels (before consonant)
 const preVowels = {
   'ැ':'q','ෑ':'Q','ෙ':'f','ේ':'fa','ෛ':'ff'
 };
 
-// post-vowels (appear after consonant)
+// Post-vowels (after consonant)
 const postVowels = {
-  'ා':'a','ි':'s','ී':'S','ු':'d','ූ':'D'
+  'ා':'a','ි':'s','ී':'S','ු':'d','ූ':'Qid'  // here we fix long u
 };
 
-// special combined vowels
+// Combined vowels (pre+post)
 const combinedVowels = {
   'ො':['f','a'],   // “ො” = ෙ + ා
   'ෝ':['f','da'],  // “ෝ” = ෙ + ෛ
@@ -30,7 +30,7 @@ const combinedVowels = {
 // independent vowels
 const independentVowels = {
   'අ':'a','ආ':'A','ඇ':'q','ඈ':'Q',
-  'ඉ':'s','ඊ':'S','උ':'d','ඌ':'D',
+  'ඉ':'s','ඊ':'S','උ':'d','ඌ':'Qid',
   'එ':'f','ඒ':'fa','ඓ':'ff','ඔ':'df','ඕ':'dfa','ඖ':'ff'
 };
 
@@ -45,15 +45,12 @@ function sinhalaToWijesekara(text){
     const char=text[i];
     const next=text[i+1]||'';
 
-    // independent vowels
     if(independentVowels[char]){
       result+=independentVowels[char];
     }
-    // consonants
     else if(consonants[char]){
       let output=consonants[char];
 
-      // check next char
       if(preVowels[next]){
         output=preVowels[next]+output;
         i++;
@@ -67,13 +64,9 @@ function sinhalaToWijesekara(text){
 
       result+=output;
     }
-    // pre vowel alone
     else if(preVowels[char]) result+=preVowels[char];
-    // post vowel alone
     else if(postVowels[char]) result+=postVowels[char];
-    // combined vowel alone
     else if(combinedVowels[char]) result+=combinedVowels[char][0]+combinedVowels[char][1];
-    // signs
     else if(signs[char]!==undefined) result+=signs[char];
     else result+=char;
   }
