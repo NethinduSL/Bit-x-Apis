@@ -137,17 +137,17 @@ app.get('/textimg', async (req, res) => {
         });
     }
 });
-app.get('/text', async (req, res) => {
+app.get('/text', (req, res) => {
     const query = req.query.q;
-    const type = parseInt(req.query.type) || 1; // Default to 1 if not provided
+    const type = parseInt(req.query.type) || 1;
 
     if (!query) {
         return res.status(400).json({ status: false, error: 'Query parameter "q" is required' });
     }
 
     try {
-        const data = await text(query, type);
-        res.json({ status: true, response: data });
+        const result = text(query, type); // <-- call function directly
+        res.json({ status: true, response: result });
     } catch (error) {
         res.status(500).json({ status: false, error: error.message });
     }
