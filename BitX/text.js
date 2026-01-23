@@ -1,108 +1,68 @@
 // BitX/text.js
 // Sinhala Unicode → Wijesekara Converter
 
-function sinhalaToWijesekara(text, type = 1) {
-  if (!text) return '';
+const sinhalaToWijesekaraMap = {
+'අ':'w','ආ':'wd','ඇ':'we','ඈ':'wE','ඉ':'b','ඊ':'B','උ':'W','ඌ':'W!','එ':'t','ඒ':'ta','ඓ':'ft','ඔ':'T','ඕ':'´','ඖ':'T!',
+'ක්':'la','ක':'l','කා':'ld','කැ':'le','කෑ':'lE','කි':'ls','කී':'lS','කු':'l=','කූ':'l+','කෙ':'fl','කේ':'fla','කො':'fld','කෝ':'flda','කෞ':'fl!',
+'ඛ්':'Ä','ඛ':'L','ඛා':'Ld','ඛැ':'Le','ඛෑ':'LE','ඛි':'Å','ඛී':'Ç','ඛු':'Lq','ඛූ':'LQ','ඛෙ':'fn','ඛේ':'fÄ','ඛො':'fLd','ඛෝ':'fLda','ඛෞ':'fl!',
+'ග්':"f'","ග":">a","ගා":">","ගැ":">d","ගෑ":">e","ගි":">E","ගී":">s","ගු":">S","ගූ":">q","ගෙ":">Q","ගේ":"f>","ගො":"f>a","ගෝ":"f>d","ගෞ":"f>da",
+'ඝ්':'Ûa','ඝ':'Û','ඝා':'Ûd','ඝැ':'Ûe','ඝෑ':'ÛE','ඝි':'Ûs','ඝී':'ÛS','ඝු':'Ûq','ඝූ':'ÛQ','ඝෙ':'fÛ','ඝේ':'fÛa','ඝො':'fÕd','ඝෝ':'fÛda','ඝෞ':'Û!',
+'ඞ්':'É','ඞ':'J','ඞා':'Jd','ඞැ':'Je','ඞෑ':'JE','ඞි':'Js','ඞී':'JS','ඞු':'Jq','ඞූ':'JQ','ඞෙ':'fJ','ඞේ':'fJa','ඞො':'fJd','ඞෝ':'fJda','ඞෞ':'J!',
+'ඟ්':'Ê','ඟ':'C','ඟා':'Cd','ඟැ':'Ce','ඟෑ':'CE','ඟි':'Cs','ඟී':'CS','ඟු':'Cq','ඟූ':'CQ','ඟෙ':'fc','ඟේ':'fC','ඟො':'fcd','ඟෝ':'fcda','ඟෞ':'fc!',
+'ච්':'COa','ච':'CO','චා':'COd','චැ':'COe','චෑ':'COE','චි':'COs','චී':'COS','චු':'COq','චූ':'COQ','චෙ':'COf','චේ':'COේ','චො':'COො','චෝ':'COෝ','චෞ':'COෞ',
+'ඡ්':'[a','ඡ':'[','ඡා':'[d','ඡැ':'[e','ඡෑ':'[E','ඡි':'[s','ඡී':'[S','ඡු':'[q','ඡූ':'[Q','ඡෙ':'f[','ඡේ':'f[a','ඡො':'f[d','ඡෝ':'f[da','ඡෞ':'[!',
+'ජ්':'{a','ජ':'{','ජා':'{d','ජැ':'{e','ජෑ':'{E','ජි':'{s','ජී':'{S','ජු':'{q','ජූ':'{Q','ජෙ':'f{','ජේ':'f{a','ජො':'f{d','ජෝ':'f{da','ජෞ':'{!',
+'ඣ්':'Ü','ඣ':'g','ඣා':'gd','ඣැ':'ge','ඣෑ':'gE','ඣි':'gq','ඣී':'gQ','ඣු':'fg','ඣූ':'fÜ','ඣෙ':'fgd','ඣේ':'fgda','ඣො':'fg!','ඣෝ':'Ga','ඣෞ':'G',
+'ඤ්':'Gd','ඤ':'GE','ඤා':'À','ඤැ':'Á','ඤෑ':'Gq','ඤි':'GQ','ඤී':'fG','ඤු':'fGa','ඤූ':'fGd','ඤෙ':'fGda','ඤේ':'Gෞ',
+'ඥ්':'â','ඥ':'v','ඥා':'vd','ඥැ':'ve','ඥෑ':'vE','ඥි':'ä','ඥී':'ã','ඥු':'vq','ඥූ':'vQ','ඥෙ':'fv','ඥේ':'fâ','ඥො':'fvd','ඥෝ':'fvda','ඥෞ':'fv!',
+'ඦ්':'Va','ඦ':'V','ඦා':'Vd','ඦැ':'Ve','ඦෑ':'VE','ඦි':'Vs','ඦී':'Î','ඦු':'Vq','ඦූ':'VQ','ඦෙ':'fV','ඦේ':'fa','ඦො':'fVd','ඦෝ':'fVda','ඦෞ':'V!',
+'ට්':'Ka','ට':'K','ටා':'Kd','ටැ':'Ke','ටෑ':'KE','ටි':'Ks','ටී':'”','ටු':'Kq','ටූ':'KQ','ටෙ':'fK','ටේ':'fKa','ටො':'fKd','ටෝ':'fKda','ටෞ':'Kෞ',
+'ඨ්':'å','ඨ':'ඬ','ඨා':'ඬd','ඨැ':'ඬe','ඨෑ':'ඬE','ඨි':'ç','ඨී':'é','ඨු':'ඬq','ඨූ':'ඬQ','ඨෙ':'fË','ඨේ':'få','ඨො':'fËd','ඨෝ':'fËda','ඨෞ':'ඬෞ',
+'ඩ්':';a','ඩ':';','ඩා':';d','ඩැ':';e','ඩෑ':';E','ඩි':';s','ඩී':';S','ඩු':';q','ඩූ':';Q','ඩෙ':'f;','ඩේ':'f;a','ඩො':'f;d','ඩෝ':'f;da','ඩෞ':';!',
+'ඪ්':':a','ඪ':':','ඪා':':d','ඪැ':':e','ඪෑ':':E','ඪි':':s','ඪී':'Ò', 'ඪු':':q','ඪූ':':Q','ඪෙ':'f(','ඪේ':'f(a','ඪො':'f(d','ඪෝ':'f(da','ඪෞ':':ෞ',
+'ණ්':'oa','ණ':'o','ණා':'od','ණැ':'oe','ණෑ':'oE','ණි':'È','ණී':'§','ණු':'ÿ','ණූ':'¥','ණෙ':'fo','ණේ':'foa','ණො':'fod','ණෝ':'foda','ණෞ':'fo!',
+'න්':'ka','න':'k','නා':'kd','නැ':'ke','නෑ':'kE','නි':'ks','නී':'kS','නු':'kq','නූ':'kQ','නෙ':'fk','නේ':'fka','නො':'fkd','නෝ':'fkda','නෞ':'fk!',
+'ඳ්':'|a','ඳ':'|','ඳා':'|d','ඳැ':'|e','ඳෑ':'|E','ඳි':'|s','ඳී':'|S','ඳු':'|q','ඳූ':'|Q','ඳෙ':'f|','ඳේ':'f|a','ඳො':'f|d','ඳෝ':'f|da','ඳෞ':'|!',
+'ප්':'ma','ප':'m','පා':'md','පැ':'me','පෑ':'mE','පි':'ms','පී':'mS','පු':'mq','පූ':'mQ','පෙ':'fm','පේ':'fma','පො':'fmd','පෝ':'fmda','පෞ':'fm!',
+'ඵ්':'Ma','ඵ':'M','ඵා':'Md','ඵැ':'Me','ඵෑ':'ME','ඵි':'Ms','ඵී':'MS','ඵු':'Mq','ඵූ':'MQ','ඵෙ':'fM','ඵේ':'fMa','ඵො':'fMd','ඵෝ':'fMda','ඵෞ':'M!',
+'බ්':'í','බ':'n','බා':'nd','බැ':'ne','බෑ':'nE','බි':'ì','බී':'î','බු':'nq','බූ':'nQ','බෙ':'fn','බේ':'fna','බො':'fnd','බෝ':'fnda','බෞ':'fn!',
+'භ්':'Na','භ':'N','භා':'Nd','භැ':'Ne','භෑ':'NE','භි':'Ns','භී':'NS','භු':'Nq','භූ':'NQ','භෙ':'fN','භේ':'fNa','භො':'fNd','භෝ':'fNda','භෞ':'N!',
+'ම්':'ò','ම':'u','මා':'ud','මැ':'ue','මෑ':'uE','මි':'ô','මී':'ö','මු':'uq','මූ':'uQ','මෙ':'fu','මේ':'fo','මො':'fou','මෝ':'foua','මෞ':'fu!',
+'ඹ්':'ha','ඹ':'h','ඹා':'hd','ඹැ':'he','ඹෑ':'hE','ඹි':'hs','ඹී':'hS','ඹු':'hq','ඹූ':'hQ','ඹෙ':'fh','ඹේ':'fha','ඹො':'fhd','ඹෝ':'fhda','ඹෞ':'h!',
+'ය්':'¾','ය':'r','යා':'rd','යැ':'/','යෑ':'?','යි':'ß','යී':'Í','යු':'re','යූ':'rE','යෙ':'fr','යේ':'f¾','යො':'frd','යෝ':'frda','යෞ':'fr!',
+'ර්':',a','ර':'r','රා':',d','රැ':',e','රෑ':',E','රි':',s','රී':',S','රු':',q','රූ':',Q','රෙ':'f,','රේ':'f,a','රො':'f,d','රෝ':'f,da','රෞ':',!',
+'ල්':'õ','ල':'j','ලා':'jd','ලැ':'je','ලෑ':'jE','ලි':'j','ලී':'jE','ලු':'jq','ලූ':'jQ','ලෙ':'fj','ලේ':'fja','ලො':'fjd','ලෝ':'fjda','ලෞ':'j!',
+'ව්':'Ya','ව':'Y','වා':'Yd','වැ':'Ye','වෑ':'YE','වි':'Ys','වී':'YS','වු':'Yq','වූ':'YQ','වෙ':'fY','වේ':'fYa','වො':'fYd','වෝ':'fYda','වෞ':'Y!',
+'ශ්':'Ia','ශ':'I','ශා':'Id','ශැ':'Ie','ශෑ':'IE','ශි':'Is','ශී':'IS','ශු':'Iq','ශූ':'IQ','ශෙ':'fI','ශේ':'fIa','ශො':'fId','ශෝ':'fIda','ශෞ':'I!',
+'ෂ්':'ia','ෂ':'i','ෂා':'id','ෂැ':'ie','ෂෑ':'iE','ෂි':'is','ෂී':'iS','ෂු':'iq','ෂූ':'iQ','ෂෙ':'fi','ෂේ':'fia','ෂො':'fid','ෂෝ':'fida','ෂෞ':'fi!',
+'ස්':'ya','ස':'y','සා':'yd','සැ':'ye','සෑ':'yE','සි':'ys','සී':'yS','සු':'yq','සූ':'yQ','සෙ':'fy','සේ':'fya','සො':'fyd','සෝ':'fyda','සෞ':'y!',
+'හ්':'<a','හ':'<','හා':'<d','හැ':'<e','හෑ':'<E','හි':'<s','හී':'<S','හු':'<q','හූ':'<Q','හෙ':'f<','හේ':'f<a','හො':'f<d','හෝ':'f<da','හෞ':'<!',
+'ළ්':'*a','ළ':'*','ලා':'*d','ළැ':'*e','ළෑ':'*E','ළි':'*s','ළී':'*S','ළු':'*q','ළූ':'*Q','ළෙ':'f*','ළේ':'f*a','ළො':'f*d','ළෝ':'f*da','ළෞ':'*!',
+'ෆ්':'ƒa','ෆ':'ƒ','ෆා':'ƒd','ෆැ':'ƒe','ෆෑ':'ƒE','ෆි':'ƒs','ෆී':'ƒS','ෆු':'ƒq','ෆූ':'ƒQ','ෆෙ':'ƒf','ෆේ':'ƒa','ෆො':'ƒd','ෆෝ':'ƒda','ෆෞ':'ƒ!'
+};
 
-  const consonants = {
-    'ක':'l','ඛ':'L','ග':'.','ඝ':'>',
-    'ච':'c','ඡ':'P','ජ':'j','ඣ':'C',
-    'ට':'g','ඨ':'G','ඩ':'v','ඪ':'V',
-    'ත':';','ථ':':','ද':'o','ධ':'O',
-    'න':'k','ණ':'K','ප':'m','ඵ':'M',
-    'බ':'n','භ':'N','ම':'u',
-    'ය':'H','ර':'r','ල':',','ළ':'<',
-    'ව':'J','ස':'i','ශ':'Y','ෂ':'I',
-    'හ':'y','ෆ':'F'
-  };
-
-  const vowels = {
-    'ා':'a','ැ':'q','ෑ':'Q',
-    'ි':'s','ී':'S','ු':'d','ූ':'D',
-    'ෙ':'f','ේ':'fa','ො':'df','ෝ':'dfa','ෛ':'ff'
-  };
-
-  const signs = {'ං':'x','ඃ':'X','්':''};
-
-  const independentVowels = {
-    'අ':'a','ආ':'A','ඇ':'q','ඈ':'Q',
-    'ඉ':'s','ඊ':'S','උ':'d','ඌ':'D',
-    'එ':'f','ඒ':'fa','ඔ':'df','ඕ':'dfa','ඖ':'ff'
-  };
-
-  const extendedType2 = {
-    'ඞ':'J','ඦ':'K','෴':'￦'
-  };
-
-  let result = '';
-  let buffer = '';
-
-  for (let i=0; i<text.length; i++) {
-    const char = text[i];
-    const nextChar = text[i+1] || '';
-
-    // Extended type 2
-    if(type === 2 && extendedType2[char]){
-      if(buffer) result += buffer;
-      buffer = extendedType2[char];
-      continue;
-    }
-
-    // Independent vowels
-    if(independentVowels[char]){
-      if(buffer) result += buffer;
-      result += independentVowels[char];
-      buffer = '';
-      continue;
-    }
-
-    // Consonants
-    if(consonants[char]){
-      if(buffer) result += buffer;
-      buffer = consonants[char];
-
-      // Check for dependent vowel
-      if(vowels[nextChar]){
-        buffer += vowels[nextChar];
-        i++; // skip next char
-        result += buffer;
-        buffer = '';
-      } else if(nextChar === '්'){ // hal kirīma
-        i++; // skip hal
-        result += buffer;
-        buffer = '';
-      } else {
-        // consonant without vowel or hal = implicit 'a'
-        buffer += 'a';
-        result += buffer;
-        buffer = '';
+function sinhalaToWijesekara(text,type=1){
+  if(!text) return '';
+  const keys=Object.keys(sinhalaToWijesekaraMap).sort((a,b)=>b.length-a.length);
+  let result='';
+  for(let i=0;i<text.length;){
+    let matched=false;
+    for(const key of keys){
+      if(text.startsWith(key,i)){
+        result+=sinhalaToWijesekaraMap[key];
+        i+=key.length;
+        matched=true;
+        break;
       }
-      continue;
     }
-
-    // Dependent vowel alone
-    if(vowels[char]){
-      result += buffer + vowels[char];
-      buffer = '';
-      continue;
+    if(!matched){
+      result+=text[i];
+      i++;
     }
-
-    // Signs
-    if(signs[char] !== undefined){
-      result += buffer + signs[char];
-      buffer = '';
-      continue;
-    }
-
-    // Anything else (punctuation, space)
-    result += buffer + char;
-    buffer = '';
   }
-
-  return result + buffer;
+  return result;
 }
 
-// Export as async function to match your route usage
-module.exports.text = async function(text, type = 1) {
-  return sinhalaToWijesekara(text, type);
+module.exports.text=async function(text,type=1){
+  return sinhalaToWijesekara(text,type);
 };
