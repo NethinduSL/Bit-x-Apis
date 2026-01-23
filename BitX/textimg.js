@@ -44,11 +44,10 @@ async function textImage(
         maxWidth = Math.max(maxWidth, tempCtx.measureText(line).width);
     });
 
-    const lineHeight = fontSize * 1.2;
-    const padding = fontSize * 0.1; // 10% padding on each side
+    const lineHeight = fontSize * 1.2; // spacing between lines
 
-    const width = Math.ceil(maxWidth + padding * 2);
-    const height = Math.ceil(lines.length * lineHeight + padding * 2);
+    const width = Math.ceil(maxWidth);
+    const height = Math.ceil(lines.length * lineHeight);
 
     /* ---------- CREATE CANVAS ---------- */
     const canvas = createCanvas(width, height);
@@ -58,13 +57,13 @@ async function textImage(
     ctx.font = `${fontSize}px "${fontName}"`;
     ctx.textBaseline = 'top';
 
-    let xPos = padding; // default left
+    let xPos = 0; // no padding
     if (align === 'center') xPos = width / 2;
-    if (align === 'right') xPos = width - padding;
+    if (align === 'right') xPos = width;
 
     /* ---------- DRAW TEXT ---------- */
     lines.forEach((line, index) => {
-        const yPos = padding + index * lineHeight;
+        const yPos = index * lineHeight;
 
         ctx.save();
 
