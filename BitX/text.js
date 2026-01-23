@@ -1,25 +1,71 @@
 // BitX/text.js
 // Sinhala Unicode → Wijesekara English Key Converter
+// Based on SLS 1134:2004 (Wijesekara Layout)
 
 function sinhalaToWijesekara(text) {
   if (!text) return '';
 
+  // Base consonants
   const consonants = {
-    'ක': 'l', 'ඛ': 'L', 'ග': '.', 'ඝ': '>', 'ච': 'c', 'ජ': 'j',
-    'ට': 'g', 'ඩ': 'v', 'ත': 'w', 'ද': 'o', 'න': 'k', 'ප': 'm',
-    'බ': 'n', 'ම': 'u', 'ය': 'h', 'ර': 'r', 'ල': 's', 'ව': 'j',
-    'ස': 'i', 'හ': 'y', 'ළ': 'f'
+    'ක': 'l', 'ඛ': 'L',
+    'ග': '.', 'ඝ': '>',
+    'ච': 'c', 'ඡ': 'P',
+    'ජ': 'j', 'ඣ': 'C',
+    'ට': 'g', 'ඨ': 'G',
+    'ඩ': 'v', 'ඪ': 'V',
+    'ත': ';', 'ථ': ':',
+    'ද': 'o', 'ධ': 'O',
+    'න': 'k', 'ණ': 'K',
+    'ප': 'm', 'ඵ': 'M',
+    'බ': 'n', 'භ': 'N',
+    'ම': 'u',
+    'ය': 'H',
+    'ර': 'r',
+    'ල': ',', 'ළ': '<',
+    'ව': 'J',
+    'ස': 'i', 'ශ': 'Y', 'ෂ': 'I',
+    'හ': 'y',
+    'ෆ': 'F'
   };
 
+  // Dependent vowel signs
   const vowels = {
-    'ා': 'a', 'ැ': 'A', 'ෑ': 'AA', 'ි': 's', 'ී': 'S',
-    'ු': 'd', 'ූ': 'D', 'ෙ': 'f', 'ේ': 'fa', 'ො': 'df',
-    'ෝ': 'dfa', 'ෛ': 'ff', 'ං': 'x', '්': ''
+    'ා': 'a',
+    'ැ': 'q',
+    'ෑ': 'Q',
+    'ි': 's',
+    'ී': 'S',
+    'ු': 'd',
+    'ූ': 'D',
+    'ෙ': 'f',
+    'ේ': 'fa',
+    'ො': 'df',
+    'ෝ': 'dfa',
+    'ෛ': 'ff'
   };
 
+  // Special signs
+  const signs = {
+    'ං': 'x',
+    'ඃ': 'X',
+    '්': '' // hal kirīma
+  };
+
+  // Independent vowels
   const independentVowels = {
-    'අ': 'a', 'ආ': 'A', 'ඉ': 's', 'ඊ': 'S', 'උ': 'd',
-    'ඌ': 'D', 'එ': 'f', 'ඒ': 'fa', 'ඔ': 'df', 'ඕ': 'dfa'
+    'අ': 'a',
+    'ආ': 'A',
+    'ඇ': 'q',
+    'ඈ': 'Q',
+    'ඉ': 's',
+    'ඊ': 'S',
+    'උ': 'd',
+    'ඌ': 'D',
+    'එ': 'f',
+    'ඒ': 'fa',
+    'ඔ': 'df',
+    'ඕ': 'dfa',
+    'ඖ': 'ff'
   };
 
   let result = '';
@@ -27,14 +73,23 @@ function sinhalaToWijesekara(text) {
 
   for (let char of text) {
     if (consonants[char]) {
+      if (buffer) result += buffer;
       buffer = consonants[char];
-    } else if (vowels[char]) {
-      buffer += vowels[char];
-      result += buffer;
+    }
+    else if (vowels[char]) {
+      result += buffer + vowels[char];
       buffer = '';
-    } else if (independentVowels[char]) {
+    }
+    else if (signs[char] !== undefined) {
+      result += buffer + signs[char];
+      buffer = '';
+    }
+    else if (independentVowels[char]) {
+      if (buffer) result += buffer;
       result += independentVowels[char];
-    } else {
+      buffer = '';
+    }
+    else {
       result += buffer + char;
       buffer = '';
     }
@@ -53,14 +108,13 @@ async function text(query) {
       status: true,
       Created_by: 'BitX',
       title: 'Sinhala → Wijesekara Converter',
-      poweredBy: 'Wijesekara Keyboard Layout',
+      poweredBy: 'SLS 1134 Wijesekara Keyboard',
       response: converted
     };
-  } catch (error) {
-    console.error('Conversion Error:', error.message);
-    throw new Error('Failed to convert text: ' + error.message);
+  } catch (err) {
+    console.error(err);
+    throw new Error('Conversion failed');
   }
 }
 
-// FIX: export the correct function
 module.exports = { text };
