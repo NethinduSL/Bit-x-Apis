@@ -137,8 +137,7 @@ app.get('/textimg', async (req, res) => {
         });
     }
 });
-
-app.get('/text', (req, res) => {
+app.get('/text', async (req, res) => {
     const query = req.query.q;
     const type = parseInt(req.query.type) || 1; // Default to 1 if not provided
 
@@ -146,9 +145,12 @@ app.get('/text', (req, res) => {
         return res.status(400).json({ status: false, error: 'Query parameter "q" is required' });
     }
 
-    text(query, type)
-        .then(data => res.json(data))
-        .catch(error => res.status(500).json({ status: false, error: error.message }));
+    try {
+        const data = await text(query, type);
+        res.json({ status: true, response: data });
+    } catch (error) {
+        res.status(500).json({ status: false, error: error.message });
+    }
 });
 
 
