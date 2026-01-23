@@ -9,7 +9,7 @@ const { chatgpt } = require('./BitX/ai');
 const { math } = require('./BitX/math');
 const { hiru } = require('./BitX/news');
 const { xen } = require('./BitX/xen.js');
-const { text } = require('./BitX/text');
+const text = require('./BitX/text');
 const { textImage } = require('./BitX/textimg');
 
 const { mahindaNews } = require('./BitX/mahindaNews');
