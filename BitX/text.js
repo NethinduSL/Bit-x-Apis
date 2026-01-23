@@ -4,6 +4,9 @@ const {
     baminitoUnicode,
     kaputaToUnicode,
     amaleeToUnicode,
+    thibusToUnicode,
+    kaputaToUnicod,
+    amaleeToUnicode,
     thibusToUnicode
 } = require('sinhala-unicode-coverter');
 
