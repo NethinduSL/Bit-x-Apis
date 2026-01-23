@@ -1,3 +1,6 @@
+// BitX/text.js
+// Sinhala Unicode → Wijesekara Converter
+
 function sinhalaToWijesekara(text, type = 1) {
   if (!text) return '';
 
@@ -65,7 +68,6 @@ function sinhalaToWijesekara(text, type = 1) {
         result += buffer;
         buffer = '';
       } else if(nextChar === '්'){ // hal kirīma
-        buffer += '';
         i++; // skip hal
         result += buffer;
         buffer = '';
@@ -99,3 +101,8 @@ function sinhalaToWijesekara(text, type = 1) {
 
   return result + buffer;
 }
+
+// Export as async function to match your route usage
+module.exports.text = async function(text, type = 1) {
+  return sinhalaToWijesekara(text, type);
+};
