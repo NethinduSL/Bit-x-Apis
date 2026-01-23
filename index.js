@@ -126,14 +126,26 @@ app.get('/textimg', async (req, res) => {
     const size = parseInt(req.query.size) || 200;
     const align = req.query.align || 'center';
     const color = req.query.color || '#000000';
+    const style = req.query.s || ''; // b, i, u, bi, etc.
 
     try {
-        const result = await textImage(query, font, size, align, color);
+        const result = await textImage(
+            query,
+            font,
+            size,
+            align,
+            color,
+            style
+        );
         res.json(result);
     } catch (err) {
-        res.status(500).json({ status: false, error: err.message });
+        res.status(500).json({
+            status: false,
+            error: err.message
+        });
     }
 });
+
 
 
 app.get('/fonts', (req, res) => {
