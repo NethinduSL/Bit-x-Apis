@@ -1,41 +1,56 @@
-lines.forEach((line, index) => {
-    const yPos = index * lineHeight + fontSize * 0.15;
+async function textImage(query, fontName, fontSize, align, color, style = '') {
+    if (!query) throw new Error('Query parameter "q" is required');
 
-    ctx.save();
+    /* ---------- SPLIT TEXT FIRST ---------- */
+    const lines = query.split(/\r?\n/);
 
-    /* ---------- FAKE ITALIC ---------- */
-    if (isItalic) {
-        ctx.transform(1, 0, -0.3, 1, 0, 0); // skew
-    }
+    /* ---------- STYLE FLAGS ---------- */
+    const isBold = style.includes('b');
+    const isItalic = style.includes('i');
+    const isUnderline = style.includes('u');
 
-    /* ---------- FAKE BOLD ---------- */
-    const boldOffsets = isBold ? [0, 1.2, 2.4] : [0];
+    /* ---------- FONT SETUP ---------- */
+    ctx.font = `${fontSize}px "${fontName}"`;
+    ctx.fillStyle = color;
+    ctx.textAlign = align;
+    ctx.textBaseline = 'top';
 
-    boldOffsets.forEach(offset => {
-        let drawX = xPos + offset;
+    /* ---------- DRAW ---------- */
+    lines.forEach((line, index) => {
+        const yPos = index * lineHeight + fontSize * 0.15;
 
-        if (align === 'center' && isItalic) drawX += yPos * 0.3;
-        if (align === 'left' && isItalic) drawX += yPos * 0.3;
-        if (align === 'right' && isItalic) drawX += yPos * 0.3;
+        ctx.save();
 
-        ctx.fillText(line, drawX, yPos);
+        // Fake italic
+        if (isItalic) {
+            ctx.transform(1, 0, -0.3, 1, 0, 0);
+        }
+
+        // Fake bold
+        const offsets = isBold ? [0, 1.2, 2.4] : [0];
+
+        offsets.forEach(offset => {
+            let drawX = xPos + offset;
+            if (isItalic) drawX += yPos * 0.3;
+            ctx.fillText(line, drawX, yPos);
+        });
+
+        ctx.restore();
+
+        // Underline
+        if (isUnderline) {
+            const textWidth = ctx.measureText(line).width;
+            let startX = xPos - textWidth / 2;
+            if (align === 'left') startX = xPos;
+            if (align === 'right') startX = xPos - textWidth;
+
+            const underlineY = yPos + fontSize + 6;
+            ctx.beginPath();
+            ctx.moveTo(startX, underlineY);
+            ctx.lineTo(startX + textWidth, underlineY);
+            ctx.strokeStyle = color;
+            ctx.lineWidth = Math.max(2, fontSize * 0.06);
+            ctx.stroke();
+        }
     });
-
-    ctx.restore();
-
-    /* ---------- UNDERLINE ---------- */
-    if (isUnderline) {
-        const textWidth = ctx.measureText(line).width;
-        let startX = xPos - textWidth / 2;
-        if (align === 'left') startX = xPos;
-        if (align === 'right') startX = xPos - textWidth;
-
-        const underlineY = yPos + fontSize + 6;
-        ctx.beginPath();
-        ctx.moveTo(startX, underlineY);
-        ctx.lineTo(startX + textWidth, underlineY);
-        ctx.lineWidth = Math.max(2, fontSize * 0.06);
-        ctx.strokeStyle = color;
-        ctx.stroke();
-    }
-});
+}
