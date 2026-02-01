@@ -43,8 +43,8 @@ async function textImage(
         maxWidth = Math.max(maxWidth, tempCtx.measureText(line).width);
     });
     
-    const lineHeight = fontSize * 1.5;
-    const padding = fontSize * 0.3; // 10% padding on each side
+    const lineHeight = fontSize * 1.3;
+    const padding = fontSize * 0.5; // 10% padding on each side
     const width = Math.ceil(maxWidth + padding * 2);
     const height = Math.ceil(lines.length * lineHeight + padding * 2);
     
