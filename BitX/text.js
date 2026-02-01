@@ -7,7 +7,11 @@ const {
     thibusToUnicode,
     unicodeToDlManel,
     unicodeToBamini,
-    unicodeToKaputa
+    unicodeToKaputa,
+    singlishToUnicode,
+    singlishPhoneticToUnicode,
+    tanglishToUnicode
+    
 } = require('sinhala-unicode-coverter');
 
 function convertText(text, type = 1) {
@@ -24,6 +28,12 @@ function convertText(text, type = 1) {
         case 7: return fmAbayaToUnicode(text);
         case 8: return dlManelToUnicode(text);
         case 9: return baminitoUnicode(text);
+
+      // singlish  → unicode 
+        case 10: return singlishToUnicode(text);
+        case 11: return singlishPhoneticToUnicode(text);
+        case 12: return tanglishToUnicode(text);
+        
 
         default: return text;
     }
