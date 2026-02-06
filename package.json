@@ -1,4 +1,4 @@
-  "name": "bitx-api",
+{  "name": "bitx-api",
   "version": "1.0.0",
   "description": "Bitx APIs with Express",
   "main": "index.js",
