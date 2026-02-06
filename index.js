@@ -189,34 +189,26 @@ app.get('/fonts', (req, res) => {
 });
 
 // ---------- ✅ Visits Route ----------
+
+// Temporary in-memory store for visits
+const visitsStore = {}; // { url: [timestamps] }
+
 app.get('/visits', (req, res) => {
   try {
     const url = req.query.url;
     if (!url) return res.status(400).json({ error: 'url query is required' });
 
     const now = new Date();
-    const filePath = path.join(__dirname, 'visits.json');
 
-    // Load existing visits
-    let visitsData = {};
-    if (fs.existsSync(filePath)) {
-      try {
-        visitsData = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
-      } catch {
-        visitsData = {};
-      }
-    }
-
-    // Initialize array for URL
-    if (!visitsData[url]) visitsData[url] = [];
+    // Initialize array for the URL if first visit
+    if (!visitsStore[url]) visitsStore[url] = [];
 
     // Add current visit
-    visitsData[url].push(now.getTime());
+    visitsStore[url].push(now.getTime());
 
-    // Save back to file
-    fs.writeFileSync(filePath, JSON.stringify(visitsData, null, 2));
+    const timestamps = visitsStore[url];
 
-    const timestamps = visitsData[url];
+    // Calculate daily and monthly visits
     const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
     const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).getTime();
 
@@ -224,7 +216,12 @@ app.get('/visits', (req, res) => {
     const monthlyVisits = timestamps.filter(ts => ts >= startOfMonth).length;
     const totalVisits = timestamps.length;
 
-    res.json({ url, dailyVisits, monthlyVisits, totalVisits });
+    res.json({
+      url,
+      dailyVisits,
+      monthlyVisits,
+      totalVisits
+    });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
