@@ -1,7 +1,6 @@
-{
-  "name": "sinhala-unicode-converter-api",
+  "name": "bitx-api",
   "version": "1.0.0",
-  "description": "Sinhala to Unicode converter API",
+  "description": "Bitx APIs with Express",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
@@ -15,7 +14,7 @@
     "yt-search": "^2.12.0",
     "puppeteer": "^22.8.2",
     "canvas": "3.2.1",
-    "sinhala-unicode-converter": "github:NethinduSL/SINFIG-PKG"        
+    "sinhala-unicode-coverter":"1.0.2"
   },
   "devDependencies": {
     "nodemon": "^2.0.22"
