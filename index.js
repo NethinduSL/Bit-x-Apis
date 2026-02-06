@@ -241,6 +241,165 @@ app.get('/fonts', (req, res) => {
   });
 });
 
+You said:
+Cerete a route caleed vist reqsts will come like this /visits?url=www.url.com show dayly visits and all vists and monthy visits in responce app.get('/video', async (req, res) => {
+  try {
+    const query = req.query.q;
+    const data = await video(query);
+    res.json(data);
+  } catch (error) {
+    res.status(error.statusCode || 500).json({
+      error: error.message
+    });
+
+  }
+});
+
+ChatGPT said:
+Gotcha 👍
+You want a new Express route /visits that accepts a URL like:
+
+/visits?url=www.url.com
+and responds with daily visits, monthly visits, and total visits.
+
+Below is a clean, simple implementation using Express + MongoDB (most common case).
+I’ll keep it in the same style as your /video route.
+
+Example data model (MongoDB)
+Each visit is stored with URL + timestamp.
+
+// models/Visit.js
+const mongoose = require('mongoose');
+
+const visitSchema = new mongoose.Schema({
+  url: { type: String, required: true },
+  createdAt: { type: Date, default: Date.now }
+});
+
+module.exports = mongoose.model('Visit', visitSchema);
+Visits route
+const Visit = require('./models/Visit');
+
+app.get('/visits', async (req, res) => {
+  try {
+    const url = req.query.url;
+    if (!url) {
+      return res.status(400).json({ error: 'url query is required' });
+    }
+
+    const now = new Date();
+
+    // start of today
+    const startOfDay = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate()
+    );
+
+    // start of month
+    const startOfMonth = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      1
+    );
+
+    const [daily, monthly, total] = await Promise.all([
+      Visit.countDocuments({
+        url,
+        createdAt: { $gte: startOfDay }
+      }),
+      Visit.countDocuments({
+        url,
+        createdAt: { $gte: startOfMonth }
+      }),
+      Visit.countDocuments({ url })
+    ]);
+
+    res.json({
+      url,
+      dailyVisits: daily,
+      monthlyVisits: monthly,
+      totalVisits: total
+    });
+
+  } catch (error) {
+    res.status(error.statusCode || 500).json({
+      error: error.message
+    });
+  }
+});
+(Optional) Track a visit
+Call this whenever someone visits the URL:
+
+app.post('/visit', async (req, res) => {
+  try {
+    const { url } = req.body;
+    await Visit.create({ url });
+    res.json({ success: true });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+Example response
+GET /visits?url=www.url.com
+{
+  "url": "www.url.com",
+  "dailyVisits": 34,
+  "monthlyVisits": 892,
+  "totalVisits": 12450
+}
+If you don’t use MongoDB (file-based / memory / Redis), tell me what you’re using and I’ll rewrite this exactly for that setup 🔥
+
+
+You said:
+No put all code in route functiona nd dont use mongo db im using verel
+
+ChatGPT said:
+Ah! Got it 😎 — you want everything self-contained in the route, no database, just in-memory tracking. Perfect for Vercel functions.
+
+Here’s a complete /visits route using a simple in-memory object to track visits. This will reset every time the server restarts (because Vercel serverless functions don’t keep persistent memory), but works for testing/demo:
+
+// In your Express app file
+const express = require('express');
+const app = express();
+app.use(express.json());
+
+// In-memory store for visits
+const visitsStore = {}; // { url: [timestamps] }
+
+app.get('/visits', async (req, res) => {
+  try {
+    const url = req.query.url;
+    if (!url) return res.status(400).json({ error: 'url query is required' });
+
+    const now = new Date();
+
+    // Initialize array if first visit
+    if (!visitsStore[url]) visitsStore[url] = [];
+
+    // Log this visit
+    visitsStore[url].push(now.getTime());
+
+    const timestamps = visitsStore[url];
+
+    // Calculate daily and monthly visits
+    const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).getTime();
+
+    const dailyVisits = timestamps.filter(ts => ts >= startOfDay).length;
+    const monthlyVisits = timestamps.filter(ts => ts >= startOfMonth).length;
+    const totalVisits = timestamps.length;
+
+    res.json({
+      url,
+      dailyVisits,
+      monthlyVisits,
+      totalVisits
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 app.listen(3000, () => {
   console.log('Server running on http://localhost:3000');
 });
